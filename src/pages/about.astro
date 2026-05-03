@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="About · phi" description="About this site.">
+  <article class="post-content">
+    <p class="post-meta">About</p>
+    <h1 class="post-title">About this site</h1>
+    <p class="post-subtitle">A small library of long-form essays.</p>
+
+    <p>
+      This is a personal notebook of essays on the history of religion, the
+      philosophy of violence, and the long arc by which ideas turn into their
+      opposites. The pieces here are written to be read slowly — paragraph by
+      paragraph — rather than skimmed.
+    </p>
+
+    <p>
+      Where it helps, the essays come with a companion audio version. The
+      audio is a two-voice spoken dialog, synthesized locally on Apple Silicon
+      with the open-source <a href="https://huggingface.co/hexgrad/Kokoro-82M">Kokoro</a> text-to-speech model running through MLX.
+    </p>
+
+    <h2>Colophon</h2>
+    <p>
+      The site is built with <a href="https://astro.build">Astro</a>, deployed
+      on <a href="https://vercel.com">Vercel</a>, and styled in plain CSS.
+      Body text is set in <em>Crimson Pro</em>; the small caps and metadata
+      use <em>Inter</em>. The cover artwork was generated with OpenAI's
+      <em>gpt-image-2</em>.
+    </p>
+  </article>
+</BaseLayout>

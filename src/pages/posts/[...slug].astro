@@ -1,0 +1,57 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<"posts">;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+const { title, subtitle, description, pubDate, cover, audio, pdf, tags } = post.data;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<BaseLayout title={`${title} · phi`} description={description} ogImage={cover}>
+  <article>
+    <p class="post-meta">{fmt(pubDate)}</p>
+    <h1 class="post-title">{title}</h1>
+    {subtitle && <p class="post-subtitle">{subtitle}</p>}
+
+    {cover && <img class="post-cover" src={cover} alt={`${title} — cover art`} />}
+
+    {(audio || pdf) && (
+      <aside class="post-aside">
+        {audio && <h3>Listen</h3>}
+        {audio && <audio controls preload="none" src={audio}></audio>}
+        <div class="download-row">
+          {audio && <a href={audio} download>↓ Download MP3</a>}
+          {pdf && <a href={pdf} download>↓ Download PDF</a>}
+        </div>
+      </aside>
+    )}
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+    <footer class="post-footer">
+      {tags.length > 0 && (
+        <div class="tag-list">
+          {tags.map((t) => <span class="tag">{t}</span>)}
+        </div>
+      )}
+      <a href="/">← all writing</a>
+    </footer>
+  </article>
+</BaseLayout>
