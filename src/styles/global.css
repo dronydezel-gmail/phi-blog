@@ -332,6 +332,46 @@ th {
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
 }
 
+.post-watch {
+  position: relative;
+  display: block;
+  margin: 1.6em 0 2.4em;
+  text-decoration: none;
+}
+
+.post-watch .post-cover {
+  display: block;
+  margin: 0;
+  transition: filter 0.2s ease;
+}
+
+.post-watch-badge {
+  position: absolute;
+  left: 50%;
+  bottom: 1.1rem;
+  transform: translateX(-50%);
+  padding: 0.5em 1.1em;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #0a0a0a;
+  background: #ffd500;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.post-watch:hover .post-cover,
+.post-watch:focus-visible .post-cover {
+  filter: brightness(1.08);
+}
+
+.post-watch:hover .post-watch-badge,
+.post-watch:focus-visible .post-watch-badge {
+  background: #fff1a8;
+}
+
 .post-content {
   /* the markdown body */
 }

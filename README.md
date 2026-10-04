@@ -43,7 +43,8 @@ are correct.
 
 1. Create `src/content/posts/<slug>.md`
 2. Add frontmatter (see existing posts; `title`, `pubDate`, `description`
-   are required; `subtitle`, `cover`, `audio`, `pdf`, `tags` optional).
+   are required; `subtitle`, `cover`, `audio`, `youtube`, `pdf`, `tags` optional; with `youtube`,
+   the cover becomes a thumbnail linking to the video).
 3. Write the body in markdown. Drop images into `public/images/` and
    reference them as `/images/foo.png`.
 4. `npm run dev` to preview.

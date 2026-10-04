@@ -16,7 +16,7 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
-const { title, subtitle, description, pubDate, cover, audio, pdf, tags } = post.data;
+const { title, subtitle, description, pubDate, cover, audio, youtube, pdf, tags } = post.data;
 
 const fmt = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
@@ -28,7 +28,14 @@ const fmt = (d: Date) =>
     <h1 class="post-title">{title}</h1>
     {subtitle && <p class="post-subtitle">{subtitle}</p>}
 
-    {cover && <img class="post-cover" src={cover} alt={`${title} — cover art`} />}
+    {youtube && cover ? (
+      <a class="post-watch" href={youtube} target="_blank" rel="noopener">
+        <img class="post-cover" src={cover} alt={`${title} — watch on YouTube`} />
+        <span class="post-watch-badge">▶ Watch on YouTube</span>
+      </a>
+    ) : (
+      cover && <img class="post-cover" src={cover} alt={`${title} — cover art`} />
+    )}
 
     {(audio || pdf) && (
       <aside class="post-aside">

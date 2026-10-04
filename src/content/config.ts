@@ -9,6 +9,7 @@ const posts = defineCollection({
     pubDate: z.coerce.date(),
     cover: z.string().optional(),
     audio: z.string().optional(),
+    youtube: z.string().url().optional(),
     pdf: z.string().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),

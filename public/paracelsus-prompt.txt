@@ -1,0 +1,62 @@
+TITLE: "Paracelsus — Only the Dose Makes the Poison"
+
+FORMAT: exactly 28 seconds, 16:9, 1920x1080, native 60fps with perfectly constant frame pacing. Ultra-smooth: no stutter, no frame skipping, no jitter, no flicker, no warping or melting objects. No cuts at all: the entire film is ONE continuous infinite zoom. The camera pushes forward the whole time at a smooth, steady exponential rate, slowing gently as it approaches each round form, speeding up as it dives through it, and easing out on the other side into the next chapter of his life. Every chapter is hidden inside a round form in the previous one. All text stays sharp, stable and correctly spelled.
+
+CORE CONCEPT: the life of Paracelsus (Theophrastus von Hohenheim, 1493–1541), the wandering Swiss physician who turned alchemy away from gold and toward medicine, told through round forms that each hold the next: a ripple in a mountain river, a crucible of molten ore, a cart wheel, a bonfire, a boiling flask, a miner's lamp, a rolled bandage, a printer's ink ball, the pan of a balance, and finally a single drop. The camera dives through each round form into the next chapter. A thin sulphur-yellow ring stays centered on screen through the whole film as a guide, growing larger with each chapter. At the very end it closes into a single drop.
+
+VISUAL STYLE: bold modern editorial collage, like a Swiss poster in motion built from 16th-century engravings. Strict three-color palette: deep black (#0A0A0A), bone white (#F1ECE2) and sulphur yellow (#FFD500). No other colors anywhere. Every object and surface is rendered as rich, realistic material (river stone, raw ore, iron, wood, fire, glass, smoke, linen, brass) but processed as a black-and-bone-white duotone with a fine, stable engraved crosshatch line texture locked to each surface, like a Renaissance copperplate engraving printed on a modern poster. Sulphur yellow is used as a single spot color only for things that are alive or active: the guide ring, fire, molten metal, glowing liquids, lamp light, drops, and the headline words. Real depth: objects sit at different distances and move with smooth parallax. Subtle paper-print grain on clean bone-white paper. Soft vignette. The engraved line texture never shimmers, crawls or produces moiré.
+
+TYPOGRAPHY: one massive extra-condensed bold uppercase sans-serif typeface (tall, narrow, heavy, very tight tracking) for the single headline word in each chapter, set huge, filling most of the frame height, in sulphur yellow. A small clean monospace typeface in bone white for the place and year label in each chapter. No serif or blackletter fonts anywhere. Headline words are placed in 3D space between the camera and the scene, so the camera flies past and through the letters with parallax as it zooms.
+
+YEAR COUNTER: along the left edge, set vertically, a tall rolling odometer of year digits in the monospace typeface, bone white, counting the years of his life. As the camera dives through each round form, the digits spin smoothly and land on the next year, like a mechanical counter: 1493, 1502, 1517, 1527, 1531, 1533, 1536, 1538, 1541.
+
+MOTION RULES: every move eases in and out. Objects drift with gentle parallax. Headline words slide in on the beat with a quick, clean ease-out and no bounce, hold, then rush past the camera as the zoom accelerates. Flames, smoke, steam and light move slowly and smoothly. Everything locks to the music's beat.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+0:00–0:03 | ROOT
+Low view across the dark, fast water of the Sihl river beneath the arched stone Devil's Bridge. The stone arch and its reflection in the still pool form one perfect ring. A single sulphur-yellow drop falls into the center of the ring and concentric ripples spread outward. In the foreground, alpine herbs (yarrow, gentian, plantain) lean over the water, their fine roots exposed in the riverbank. The headline "ROOT" slides in, huge, in sulphur yellow. Small monospace label: "EINSIEDELN · 1493". The camera begins pushing in toward the center of the ripples, and the water inside the ring darkens into a deep opening.
+
+0:03–0:06 | DIG
+The camera dives through the ripple and emerges inside a long round mine tunnel cut into the mountain, timber frames receding toward the far end with strong perspective. A miner's oil lamp swings gently, throwing sulphur-yellow light across the rock walls. Veins of galena ore glitter in the stone; a pickaxe rests against the wall. At the end of the tunnel a round crucible of molten metal glows. "DIG" slides in. Label: "VILLACH · 1502". The camera glides down the tunnel toward the glowing crucible.
+
+0:06–0:09 | WANDER
+The glowing rim of the crucible cools into the iron-rimmed wooden wheel of a traveler's cart, rolling steadily along a muddy road at dusk. The road unspools ahead past mountain passes, river crossings, army tents and distant city silhouettes drifting by in parallax. A lone traveler in a wide cap and long cloak walks beside the cart, seen only from behind as a dark silhouette, a long sword at his hip. A lantern swings from the cart. "WANDER" slides in. Label: "ACROSS EUROPE · 1517". The camera pushes toward the turning hub of the wheel.
+
+0:09–0:12 | BURN
+The hub of the wheel becomes the glowing heart of a midsummer bonfire in a cobbled university square at night, seen from above. A thick leather-bound book of ancient medicine lies open in the flames, its pages curling and lifting away as glowing ash, sparks rising past the camera in slow spirals. The pages carry no legible text. "BURN" slides in. Label: "BASEL · 1527". The camera dives toward the round, white-hot core of the fire.
+
+0:12–0:15 | DISTILL
+The core of the fire becomes the small flame beneath a round-bottomed glass flask in an alchemist's laboratory. The liquid inside boils and glows sulphur yellow, vapor climbs through a glass alembic and condenses into single drops falling from its spout. Retorts, mortars, crucibles and glass vessels drift past in deep parallax. Three simple engraved alchemical symbols for salt, sulphur and mercury float slowly in the space between camera and flask. "DISTILL" slides in. Label: "ST. GALLEN · 1531". The camera pushes toward a single round drop forming at the tip of the spout.
+
+0:15–0:18 | BREATHE
+The camera passes through the drop into the dim interior of a mountain smelting hut. Thick metal fumes and fine glittering dust drift slowly through shafts of light, and the drifting dust gradually arranges itself into the branching shape of a human lung, like an anatomical engraving made of smoke. Everything feels still and heavy. "BREATHE" slides in. Label: "SCHWAZ · 1533". The camera drifts toward the round glowing glass of a miner's lamp hanging in the haze.
+
+0:18–0:21 | HEAL
+The glow of the lamp resolves into the end of a tightly rolled linen bandage seen head-on, a perfect spiral. The bandage unrolls across the frame as a clean white ribbon, revealing a printing workshop: a wooden press lowers and lifts, and a freshly printed sheet rises toward the camera with a woodcut illustration of surgical instruments and healing herbs, ink still wet. The sheet carries no legible text. "HEAL" slides in. Label: "AUGSBURG · 1536". The camera pushes toward a round leather ink ball resting on the press.
+
+0:21–0:24 | WEIGH
+The ink ball becomes the round brass pan of an apothecary's balance. In one pan rests a single bright drop glowing sulphur yellow; in the other, a tiny brass weight. The beam wobbles, then slowly settles into perfect level. Behind it, rows of unlabeled apothecary jars and glass vials drift in parallax. "WEIGH" slides in. Label: "CARINTHIA · 1538". As the beam comes to rest, the camera pushes toward the single glowing drop and through it.
+
+0:24–0:28 | THE DOSE
+The camera emerges and pulls back smoothly in one long, graceful move. Every round form from the film is revealed nested inside the next, in perfect concentric rings: river ripple, crucible, cart wheel, bonfire, flask, lamp, bandage spiral, ink ball, balance pan, with the single glowing drop at the very center, all in black, bone white and sulphur yellow. The year counter lands on 1541. Small label: "SALZBURG · 1541". In the center, in the massive condensed typeface, the title builds:
+Line 1: "PARACELSUS"
+Line 2, small monospace beneath: "Only the dose makes the poison."
+The sulphur-yellow guide ring that has been on screen all along sweeps around the title once and closes, then gently contracts into a single drop. In the final half-second, the camera begins pushing back in toward the center, the drop falls and strikes dark river water, and ripples spread inside the stone ring of the bridge, matching the very first frame so the video loops seamlessly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MUSIC: an original, modern cinematic instrumental, exactly 120 BPM, 4/4, in a minor key that lifts to major for the title. Style: pulse-driven cinematic electronic with a subtle Renaissance color, like a modern science-documentary trailer: tense, hypnotic, building. Core elements: a deep, steady heartbeat-like sub pulse on every beat, a short repeating four-note motif played on struck and bowed crystal glass (like a glass harmonica), clean and bright, a low bowed-viol drone underneath, tight staccato strings that grow faster through the film, and a sucking reverse-swell whoosh every time the camera dives through a round form, landing on a crisp low impact on the downbeat as the next chapter appears.
+Structure synced to the picture:
+0:00–0:03: only the sub pulse and the glass motif, with the single water drop and the soft rush of the river.
+0:03–0:06: staccato strings enter; dull pickaxe strikes on the off-beats; the first dive lands on a deep impact.
+0:06–0:09: a frame-drum walking rhythm and the viol drone enter; a wooden cart creak rides inside the whoosh.
+0:09–0:12: a wordless low choir swells under the strings with crackling fire; the heaviest impact so far as the book catches.
+0:12–0:15: the strings double in speed, bubbling glass and clinking vessels become rhythmic percussion, the glass motif climbs higher.
+0:15–0:18: everything drops to near-silence except the sub pulse, a slow airy breath-like swell, and a single sustained high string note, for the stillness of the smelting hut.
+0:18–0:21: warmth returns: the motif moves into the strings, the soft wooden thump of the printing press lands on each downbeat, linen rustles through the whoosh.
+0:21–0:24: a fast rising riser, a ticking like a balance beam, and a snare roll build hard; at the instant the beam settles perfectly level, half a second of total silence.
+0:24–0:28: the big payoff: the full glass motif in a major key with strings, choir and a deep impact as the title builds, then everything fades to the lone sub pulse and the single water drop from the opening, so the music loops with the video.
+No vocals with words, no lyrics, no pop beats, no EDM drops, no medieval-fair or folk-dance cliché. Modern, tense, emotional and polished.
+
+NO logos, NO watermarks, NO faces (human figures appear only as silhouettes seen from behind), NO gore or visible wounds, NO skulls, NO fantasy magic effects or glowing runes, NO parchment or aged-paper textures, NO serif or blackletter fonts, NO red, orange, blue or green colors, NO legible text on books or printed pages, NO extra text beyond what is specified.
