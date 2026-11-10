@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Siracusa–Riga via Bari and Assisi</title>
+<meta name="description" content="Six daylight driving days home from Sicily to Riga, 10–15 November 2026, with visits to St Nicholas in Bari and St Francis in Assisi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Overpass:ital,wght@0,400;0,600;0,700;1,400&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/* Slow variant. Same system as the outbound Riga–Palermo road book: road-sign condensed display, map-legend mono, green = Italy, blue = the north. */
+:root{
+  --ground:#EDF0EF; --surface:#F8FAF9; --ink:#16212B; --ink-2:#4B5762; --ink-3:#76828C;
+  --line:#D2D8DB; --line-2:#A9B3BA;
+  --north:#1D4E8F; --south:#0D6A47; --fuel:#7F5300; --fuel-bg:#F3E5C0;
+  --asphalt:#2A3541; --sun:#F8EDC4; --twilight:#D3DAE3; --night:#A9B5C2;
+  --ferry:#2C6DB3; --grid:rgba(22,33,43,.16);
+  --seg-t1:#62799A; --seg-t2:#4E6D96; --seg-text:#FFFFFF;
+  --display:"Barlow Condensed","Arial Narrow","Helvetica Neue",sans-serif;
+  --body:"Overpass",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Overpass Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1318; --surface:#131B22; --ink:#E2E8EC; --ink-2:#A2AEB8; --ink-3:#7C8892;
+    --line:#26313B; --line-2:#3E4B56;
+    --north:#8CB0E6; --south:#5EC49B; --fuel:#E6B552; --fuel-bg:#2E2615;
+    --asphalt:#C9D2D9; --sun:#39331F; --twilight:#222B35; --night:#0A0F13;
+    --ferry:#74A9E8; --grid:rgba(226,232,236,.14);
+    --seg-t1:#7F93AB; --seg-t2:#97ABC4; --seg-text:#0D1318;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1318; --surface:#131B22; --ink:#E2E8EC; --ink-2:#A2AEB8; --ink-3:#7C8892;
+  --line:#26313B; --line-2:#3E4B56;
+  --north:#8CB0E6; --south:#5EC49B; --fuel:#E6B552; --fuel-bg:#2E2615;
+  --asphalt:#C9D2D9; --sun:#39331F; --twilight:#222B35; --night:#0A0F13;
+  --ferry:#74A9E8; --grid:rgba(226,232,236,.14);
+  --seg-t1:#7F93AB; --seg-t2:#97ABC4; --seg-text:#0D1318;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:52rem;margin:0 auto;padding-left:max(clamp(16px,4vw,36px),env(safe-area-inset-left,0px));padding-right:max(clamp(16px,4vw,36px),env(safe-area-inset-right,0px));padding-block:36px 72px}
+a{color:var(--north);text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,input:focus-visible{outline:2px solid var(--north);outline-offset:2px;border-radius:2px}
+p{margin:0}
+h1,h2,h3{text-wrap:balance}
+
+/* masthead */
+.masthead{display:grid;gap:14px;padding-block:0 26px;border-bottom:3px solid var(--ink)}
+.kicker{font:600 .75rem/1.2 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+h1{font:700 clamp(3rem,11vw,5.25rem)/.9 var(--display);letter-spacing:-.005em;margin:0}
+h1 .to{color:var(--north);font-weight:500;padding-inline:.08em}
+.dek{max-width:62ch;font-size:1.0625rem;color:var(--ink-2)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:400 .8125rem/1.4 var(--mono);color:var(--ink)}
+.facts b{font-weight:600}
+.status{display:grid;gap:4px;padding:14px 16px;border-left:4px solid var(--south);background:var(--surface);border-radius:0 6px 6px 0;font-size:.9375rem}
+.status b{font-weight:600}
+
+/* section scaffolding */
+section.block{padding-block:34px 6px;display:grid;gap:16px}
+.sec-h{font:600 1.875rem/1.05 var(--display);margin:0}
+.sec-sub{color:var(--ink-2);max-width:64ch}
+
+/* route strip */
+.strip-wrap{position:relative;padding-block:8px 8px}
+.strip{display:flex;gap:2px;height:30px}
+.strip i{flex:var(--km) 1 0;min-width:0;display:grid;place-items:center;font:700 .75rem/1 var(--display);letter-spacing:.04em;font-style:normal;overflow:hidden;color:var(--seg-text)}
+.strip .t{background:var(--seg-t1)}
+.strip .t:nth-child(even){background:var(--seg-t2)}
+.strip .a{background:var(--north)}
+.strip .sic{background:var(--south)}
+.strip .it{background:var(--south);margin-left:8px;position:relative;overflow:visible}
+.strip .it::before{content:"";position:absolute;left:-9px;top:50%;width:8px;border-top:2px dashed var(--ferry)}
+.marks{position:absolute;left:0;right:0;top:8px;height:30px;pointer-events:none}
+.marks b{position:absolute;top:-4px;height:38px;width:2px;background:var(--ink);transform:translateX(-1px)}
+.marks b::after{content:attr(data-n);position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font:600 .6875rem/1 var(--mono);color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font:400 .8125rem/1.4 var(--mono);color:var(--ink-2);padding-top:18px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.cc{display:inline-grid;place-items:center;min-width:2.1em;height:1.45em;padding-inline:.45em;border:1.5px solid var(--ink);border-radius:50%;font:700 .75rem/1 var(--display);letter-spacing:.03em;color:var(--ink);background:var(--surface)}
+.nights{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(11.5rem,1fr));gap:4px 18px;font-size:.9375rem}
+.nights li{display:flex;gap:8px;align-items:baseline;padding-block:5px;border-bottom:1px solid var(--line)}
+.nights .n{font:600 .75rem/1 var(--mono);min-width:1.1em;color:var(--ink-2)}
+.nights .km{margin-left:auto;font:400 .75rem/1 var(--mono);color:var(--ink-3)}
+
+/* daylight chart */
+.daylight{display:grid;gap:7px}
+.day-row,.axis{display:grid;grid-template-columns:3.7rem 1fr 7.2rem;gap:12px;align-items:center}
+.axis-in{position:relative;height:14px}
+.axis-in span{position:absolute;transform:translateX(-50%);font:400 .6875rem/1 var(--mono);color:var(--ink-3)}
+.axis-in span:first-child{transform:none}
+.axis-in span:last-child{transform:translateX(-100%)}
+.day-lbl{font:600 .8125rem/1 var(--mono)}
+.day-track{position:relative;height:24px;border-radius:3px;overflow:hidden}
+.day-track::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent calc(100% - 1px),var(--grid) calc(100% - 1px));background-size:calc(100% / 6) 100%;pointer-events:none}
+.day-track span{position:absolute;top:5px;bottom:5px;border-radius:2px}
+.seg-drive{background:var(--asphalt)}
+.seg-ferry{background:var(--ferry)}
+.seg-visit{box-shadow:inset 0 0 0 2px var(--south);background:color-mix(in srgb,var(--south) 22%,transparent)}
+.day-sun{font:400 .75rem/1.2 var(--mono);color:var(--ink-2);white-space:nowrap}
+.chart-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.8125rem;color:var(--ink-2)}
+.chart-legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{display:inline-block;width:22px;height:12px;border-radius:2px}
+.fine{font-size:.8125rem;color:var(--ink-2);max-width:68ch}
+.dark-sum{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:4px 18px;font-size:.9375rem}
+.dark-sum li{display:flex;gap:8px;align-items:baseline;padding-block:5px;border-bottom:1px solid var(--line)}
+.dark-sum .d{font:600 .75rem/1 var(--mono);color:var(--ink-2);min-width:3.2em}
+.dark-sum .v{margin-left:auto;font:400 .75rem/1 var(--mono);color:var(--ink-3);text-align:right}
+@media (max-width:540px){
+  .day-row,.axis{grid-template-columns:3.2rem 1fr;gap:4px 10px}
+  .axis>span:last-child{display:none}
+  .day-sun{grid-column:2;font-size:.6875rem;margin-top:-2px}
+}
+
+/* stages */
+.stages{display:grid}
+.stage{padding-block:40px 8px;border-top:1px solid var(--line-2);display:grid;gap:20px}
+.stage:first-child{border-top:0}
+.stage-head{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.stage-head>div{min-width:0}
+.date{display:grid;justify-items:center;width:4.4rem;padding:8px 4px 7px;border:2px solid currentColor;border-radius:7px;font-family:var(--display);line-height:1;color:var(--north)}
+.stage.s .date{color:var(--south)}
+.date .dow,.date .mon{font-weight:600;font-size:.8125rem;letter-spacing:.1em;text-transform:uppercase}
+.date .dom{font-weight:700;font-size:2.25rem;padding-block:2px;color:var(--ink)}
+.eyebrow{font:600 .75rem/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stage h2{font:600 clamp(1.9rem,6vw,2.5rem)/1 var(--display);margin:6px 0 8px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 16px;font:400 .8125rem/1.4 var(--mono);color:var(--ink-2)}
+.meta b{font-weight:600;color:var(--ink)}
+.lede{max-width:64ch;font-size:1.0625rem}
+.rd{display:inline-block;font:600 .75rem/1 var(--mono);padding:3px 5px 2px;border:1.5px solid currentColor;border-radius:3px;white-space:nowrap;color:var(--north);vertical-align:1px}
+.stage.s .rd{color:var(--south)}
+.plan{list-style:none;margin:0;padding:0;display:grid;border-top:1px solid var(--line)}
+.plan li{display:grid;grid-template-columns:4.6rem 1fr;gap:14px;padding-block:9px;border-bottom:1px solid var(--line)}
+.plan li>div{min-width:0}
+.plan time{font:600 .875rem/1.65 var(--mono);font-variant-numeric:tabular-nums}
+.plan li.key time{color:var(--south)}
+.stage:not(.s) .plan li.key time{color:var(--north)}
+.plan small{display:block;color:var(--ink-2);font-size:.875rem}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:18px 30px;align-items:start}
+.note{min-width:0}
+.note h3{font:600 .75rem/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 6px}
+.note ul{margin:0;padding-left:1.05em;display:grid;gap:5px}
+.note li::marker{color:var(--ink-3)}
+.note.fuel{background:var(--fuel-bg);padding:13px 16px 14px;border-radius:6px}
+.note.fuel h3{color:var(--fuel)}
+.note .opt{font-weight:600}
+.note .why,td .why{color:var(--ink-2)}
+.note .gone{color:var(--ink-3)}
+.note .gone b{color:var(--ink-2)}
+.out{font:600 .8125rem/1.2 var(--mono);white-space:nowrap;color:var(--south)}
+.stage:not(.s) .out{color:var(--north)}
+
+/* reference sections */
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:24px 36px}
+.ref>div{min-width:0}
+.ref h3{font:600 1.375rem/1.1 var(--display);margin:0 0 8px}
+.ref ul{margin:0;padding-left:1.05em;display:grid;gap:6px}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9375rem;min-width:30rem}
+th,td{text-align:left;padding:8px 10px 7px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .75rem/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.co{font-family:var(--mono);font-weight:600;white-space:nowrap;color:var(--south)}
+tr.alt td{color:var(--ink-2);font-size:.875rem}
+tr.alt td.co{color:var(--ink-2)}
+tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--ink)}
+.check{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.check label{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--south)}
+.check input:checked+span{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.check b{font-weight:600}
+footer{margin-top:44px;padding-top:16px;border-top:3px solid var(--ink);font-size:.8125rem;color:var(--ink-2);display:grid;gap:6px}
+@media (max-width:480px){
+  .stage-head{grid-template-columns:1fr}
+  .date{display:flex;width:auto;justify-self:start;gap:8px;align-items:baseline;padding:6px 10px}
+  .date .dom{font-size:1.5rem;padding:0}
+  .plan li{grid-template-columns:3.9rem 1fr;gap:10px}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+<style id="nav-css">
+/* Waze + Google Maps stop list */
+.wz-wrap{display:grid;gap:4px}
+.wz-day{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between;margin-top:14px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.wz-day h3{font:600 1.25rem/1.1 var(--display);margin:0}
+.wz-all{font:600 .8125rem/1.2 var(--body);white-space:nowrap}
+.wz{list-style:none;margin:0;padding:0;display:grid}
+.wz li{display:grid;grid-template-columns:2rem 1fr;column-gap:12px;row-gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.wz-n{font:600 .875rem/1 var(--mono);color:var(--ink-2);text-align:center;align-self:start;padding-top:4px}
+.wz-txt{min-width:0;display:grid;gap:1px}
+.wz-txt b{font-weight:600}
+.wz-txt small{color:var(--ink-2);font-size:.8125rem}
+.wz-txt .wz-t{font:400 .75rem/1.4 var(--mono);color:var(--ink-3)}
+.wz-btns{grid-column:2;display:flex;flex-wrap:wrap;gap:8px}
+.wz-go,.gm-go{display:inline-grid;place-items:center;min-height:44px;padding:0 16px;border-radius:22px;font:700 .9375rem/1 var(--body);text-decoration:none;white-space:nowrap}
+.wz-go{background:var(--north);color:#fff;min-width:5.4rem}
+.gm-go{border:2px solid var(--north);color:var(--north);background:transparent}
+.wz-go:hover,.gm-go:hover{text-decoration:none;filter:brightness(1.08)}
+.wz li.wz-sleep .wz-n,.wz li.wz-sleep .wz-txt b{color:var(--sleep,var(--north))}
+.wz li.done{opacity:.45}
+.wz li.done .wz-go{background:var(--ink-3)}
+.wz li.done .gm-go{border-color:var(--ink-3);color:var(--ink-3)}
+@media (min-width:40rem){.wz li{grid-template-columns:2rem 1fr auto}.wz-btns{grid-column:3;flex-wrap:nowrap}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .wz-go{color:#0D1318}}
+:root[data-theme="dark"] .wz-go{color:#0D1318}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="kicker">Road book · 10–15 November 2026 · home via Bari and Assisi</p>
+  <h1>Siracusa<span class="to">→</span>Riga</h1>
+  <p class="dek">Six daylight days home, with two pilgrim stops. A long first day takes you straight to Bari for an evening at the tomb of St Nicholas, and the next afternoon you’re at the tomb of St Francis in Assisi. Then it’s north the usual way through Austria, Czechia, Poland and Lithuania. In both towns you sleep outside the restricted traffic zone, park within a few minutes of the hotel and walk to the church.</p>
+  <p class="facts"><span><b>≈3,520 km</b> door to door</span><span><b>6</b> countries</span><span><b>5</b> nights · <b>€71–105</b> a room</span><span><b>2</b> aboard</span><span>petrol + LPG · <b>500–600 km</b> a tank</span><span>no red meat · poultry &amp; fish</span></p>
+  <p class="status"><span><b>Bari and Assisi are booked:</b> Apartment Andromeda, with the car in the Park Battisti car park on level −1, and B&amp;B Cantico delle Creature. The other three hotels were checked on Booking.com on 7 November 2026 for these exact dates, two adults in one room.</span><span>The <a href="fast.html">4-day fast plan</a> is the alternative.</span></p>
+</header>
+
+<section class="block" aria-labelledby="h-route">
+  <h2 class="sec-h" id="h-route">The route, to scale</h2>
+  <p class="sec-sub">Italy takes the first three days: the <span class="rd">A2</span> and the <span class="rd">E90</span> coast to Bari, the Adriatic and the Apennines to Assisi, then north to the Alps. Austria to Latvia takes the last three days.</p>
+  <div class="strip-wrap" role="img" aria-label="Route bar by country: Sicily 158 km, ferry, mainland Italy 1,609 km, Austria 460 km, Czechia 235 km, Poland 703 km, Lithuania 255 km, Latvia 90 km. Overnight stops at km 602 Bari, 1,142 Assisi, 1,799 Villach, 2,364 Olomouc and 2,993 Łomża; Riga at km 3,519.">
+    <div class="strip">
+      <i class="sic" style="--km:158"></i><i class="it" style="--km:1609">I</i><i class="a" style="--km:460">A</i><i class="t" style="--km:235">CZ</i><i class="t" style="--km:703">PL</i><i class="t" style="--km:255">LT</i><i class="t" style="--km:90">LV</i>
+    </div>
+    <div class="marks" aria-hidden="true">
+      <b data-n="1" style="left:17.11%"></b><b data-n="2" style="left:32.45%"></b><b data-n="3" style="left:51.12%"></b><b data-n="4" style="left:67.18%"></b><b data-n="5" style="left:85.05%"></b>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="cc">I</i>Sicily 158 + ferry + 1,609 km</span><span><i class="cc">A</i>460</span><span><i class="cc">CZ</i>235</span><span><i class="cc">PL</i>703</span><span><i class="cc">LT</i>255</span><span><i class="cc">LV</i>90</span>
+  </div>
+  <ol class="nights">
+    <li><span class="n">1</span>Bari · St Nicholas<span class="km">km 602</span></li>
+    <li><span class="n">2</span>Assisi · St Francis<span class="km">1,142</span></li>
+    <li><span class="n">3</span>Villach<span class="km">1,799</span></li>
+    <li><span class="n">4</span>Olomouc<span class="km">2,364</span></li>
+    <li><span class="n">5</span>Łomża<span class="km">2,993</span></li>
+    <li><span class="n">·</span>Riga, home<span class="km">3,519</span></li>
+  </ol>
+</section>
+
+<section class="block" aria-labelledby="h-daylight">
+  <h2 class="sec-h" id="h-daylight">Daylight check</h2>
+  <p class="sec-sub">All the driving is by daylight. On Tuesday you start in the first light at 06:00, and on Sunday you reach Riga about sunset. Wheel time is shown, the green blocks are the church visits on foot, and breaks are the gaps. The bars run 06:00–18:00 Central European time. Riga is one hour ahead.</p>
+  <div class="daylight">
+    <div class="axis" aria-hidden="true"><span></span><div class="axis-in"><span style="left:0">06</span><span style="left:16.67%">08</span><span style="left:33.33%">10</span><span style="left:50%">12</span><span style="left:66.67%">14</span><span style="left:83.33%">16</span><span style="left:100%">18</span></div><span></span></div>
+<div class="day-row"><span class="day-lbl">Tue 10</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 0.62%,var(--twilight) 0.62% 4.43%,var(--sun) 4.43% 88.70%,var(--twilight) 88.70% 92.75%,var(--night) 92.75%)"><span class="seg-drive" style="left:0.00%;width:17.36%" title="Driving 06:00–08:05"></span><span class="seg-ferry" style="left:17.36%;width:8.33%" title="Ferry 08:05–09:05"></span><span class="seg-drive" style="left:25.69%;width:18.06%" title="Driving 09:05–11:15"></span><span class="seg-drive" style="left:45.83%;width:7.64%" title="Driving 11:30–12:25"></span><span class="seg-drive" style="left:57.64%;width:11.11%" title="Driving 12:55–14:15"></span><span class="seg-drive" style="left:70.83%;width:13.19%" title="Driving 14:30–16:05"></span><span class="seg-visit" style="left:87.50%;width:12.50%" title="Church visit on foot 16:30–18:00"></span></div><span class="day-sun">↑06:32 ↓16:39</span></div>
+<div class="day-row"><span class="day-lbl">Wed 11</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 0.80%,var(--twilight) 0.80% 4.86%,var(--sun) 4.86% 90.31%,var(--twilight) 90.31% 94.51%,var(--night) 94.51%)"><span class="seg-drive" style="left:12.50%;width:19.44%" title="Driving 07:30–09:50"></span><span class="seg-drive" style="left:34.03%;width:19.44%" title="Driving 10:05–12:25"></span><span class="seg-drive" style="left:57.64%;width:13.89%" title="Driving 12:55–14:35"></span><span class="seg-visit" style="left:75.00%;width:14.58%" title="Church visit on foot 15:00–16:45"></span></div><span class="day-sun">↑06:35 ↓16:50</span></div>
+<div class="day-row"><span class="day-lbl">Thu 12</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 3.81%,var(--twilight) 3.81% 8.02%,var(--sun) 8.02% 88.22%,var(--twilight) 88.22% 92.74%,var(--night) 92.74%)"><span class="seg-drive" style="left:12.50%;width:17.36%" title="Driving 07:30–09:35"></span><span class="seg-drive" style="left:31.94%;width:14.58%" title="Driving 09:50–11:35"></span><span class="seg-drive" style="left:50.69%;width:20.14%" title="Driving 12:05–14:30"></span><span class="seg-drive" style="left:72.92%;width:11.81%" title="Driving 14:45–16:10"></span></div><span class="day-sun">↑06:58 ↓16:35</span></div>
+<div class="day-row"><span class="day-lbl">Fri 13</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 4.26%,var(--twilight) 4.26% 8.79%,var(--sun) 8.79% 84.92%,var(--twilight) 84.92% 89.77%,var(--night) 89.77%)"><span class="seg-drive" style="left:12.50%;width:23.61%" title="Driving 07:30–10:20"></span><span class="seg-drive" style="left:38.19%;width:23.61%" title="Driving 10:35–13:25"></span><span class="seg-drive" style="left:65.97%;width:13.19%" title="Driving 13:55–15:30"></span></div><span class="day-sun">↑07:03 ↓16:11</span></div>
+<div class="day-row"><span class="day-lbl">Sat 14</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 3.47%,var(--twilight) 3.47% 8.33%,var(--sun) 8.33% 80.30%,var(--twilight) 80.30% 85.65%,var(--night) 85.65%)"><span class="seg-drive" style="left:10.42%;width:9.72%" title="Driving 07:15–08:25"></span><span class="seg-drive" style="left:22.22%;width:19.44%" title="Driving 08:40–11:00"></span><span class="seg-drive" style="left:43.75%;width:13.19%" title="Driving 11:15–12:50"></span><span class="seg-drive" style="left:61.11%;width:14.58%" title="Driving 13:20–15:05"></span></div><span class="day-sun">↑07:00 ↓15:38</span></div>
+<div class="day-row"><span class="day-lbl">Sun 15</span><div class="day-track" style="background:linear-gradient(90deg,var(--night) 2.32%,var(--twilight) 2.32% 7.68%,var(--sun) 7.68% 76.63%,var(--twilight) 76.63% 82.68%,var(--night) 82.68%)"><span class="seg-drive" style="left:8.33%;width:13.89%" title="Driving 07:00–08:40"></span><span class="seg-drive" style="left:24.31%;width:12.50%" title="Driving 08:55–10:25"></span><span class="seg-drive" style="left:40.97%;width:13.19%" title="Driving 10:55–12:30"></span><span class="seg-drive" style="left:55.56%;width:21.53%" title="Driving 12:40–15:15"></span></div><span class="day-sun">↑06:55 ↓15:12</span></div>
+  </div>
+  <div class="chart-legend">
+    <span><i class="sw" style="background:var(--asphalt)"></i>Driving</span>
+    <span><i class="sw" style="background:var(--ferry)"></i>Ferry</span>
+    <span><i class="sw" style="box-shadow:inset 0 0 0 2px var(--south);background:color-mix(in srgb,var(--south) 22%,transparent)"></i>Church visit on foot</span>
+    <span><i class="sw" style="background:var(--sun);box-shadow:inset 0 0 0 1px var(--line-2)"></i>Sun up</span>
+    <span><i class="sw" style="background:var(--twilight);box-shadow:inset 0 0 0 1px var(--line-2)"></i>Twilight</span>
+  </div>
+  <ul class="dark-sum" aria-label="Margin before sunset per day">
+    <li><span class="d">Tue</span>Bari<span class="v">35 min spare</span></li>
+    <li><span class="d">Wed</span>Assisi<span class="v">2¼ h spare</span></li>
+    <li><span class="d">Thu</span>Villach<span class="v">25 min spare</span></li>
+    <li><span class="d">Fri</span>Olomouc<span class="v">40 min spare</span></li>
+    <li><span class="d">Sat</span>Łomża<span class="v">35 min spare</span></li>
+    <li><span class="d">Sun</span>Riga<span class="v">at sunset</span></li>
+  </ul>
+</section>
+
+<section class="block" aria-labelledby="h-sleep">
+  <h2 class="sec-h" id="h-sleep">Where you sleep</h2>
+  <p class="sec-sub">In Bari and Assisi the hotels are just outside the restricted traffic zone (ZTL). You can drive there without passing a camera gate. In Bari you leave the car in the Park Battisti underground car park, 5 minutes from the apartment; in Assisi you park free at the B&amp;B below the town. The walk to the church is 17 minutes in Bari, and 29 minutes in Assisi, going up past Santa Chiara. The other nights are by the motorway.</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Night</th><th>Hotel</th><th>Parking · walk</th><th>Breakfast</th><th class="num">Room</th></tr></thead>
+      <tbody>
+        <tr><td>Tue 10</td><td><a href="https://www.booking.com/hotel/it/apartment-andromeda-bari.html"><b>Apartment Andromeda</b></a>, Bari, Via Melo da Bari 205, deluxe double with kitchen <span class="why">· 9.7 · <b>booked</b></span></td><td><b>Park Battisti</b>, level −1, ≈€20 · 5 min to the apartment · <b>17 min</b> to St Nicholas</td><td>kitchen</td><td class="num">€95–105</td></tr>
+        <tr><td>Wed 11</td><td><a href="https://www.booking.com/hotel/it/b-amp-b-cantico-delle-creature.html"><b>B&amp;B Cantico delle Creature</b></a>, Assisi, below Santa Chiara <span class="why">· 9.2 · garden and pool · <b>booked</b></span></td><td>free, at the B&amp;B · <b>29 min</b> to St Francis, 15 to St Clare</td><td>buffet</td><td class="num">booked</td></tr>
+        <tr><td>Thu 12</td><td><a href="https://www.booking.com/hotel/at/roomrent55.html"><b>Motel55</b></a>, Villach-Warmbad <span class="why">· 8.8 · self check-in · free cancellation to 9 Nov</span></td><td>free</td><td>—</td><td class="num">€98</td></tr>
+        <tr><td>Fri 13</td><td><a href="https://www.booking.com/hotel/cz/restaurace-a-penzion-u-klasku.html"><b>Penzion U Klásků</b></a>, Olomouc-Slavonín, south edge <span class="why">· 9.3 · restaurant · free cancellation to 11 Nov</span></td><td>free</td><td>included</td><td class="num">€90</td></tr>
+        <tr><td>Sat 14</td><td><a href="https://www.booking.com/hotel/pl/m-amp-w-wronowski.html"><b>M&amp;W Hotel Wronowski</b></a>, Łomża <span class="why">· 9.2 · free cancellation to 13 Nov</span></td><td>free</td><td>included, from 07:00</td><td class="num">€71</td></tr>
+        <tr class="alt"><td></td><td>Backup: <a href="https://www.booking.com/hotel/pl/pensjonat-retro.html">Pensjonat Retro</a>, Łomża · 8.7 · 24-hour desk · free cancellation</td><td>free</td><td>included</td><td class="num">€71</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="4">Five nights, plus ≈€20 for the Bari car park</td><td class="num">€354–364 + Assisi</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-waze">
+  <h2 class="sec-h" id="h-waze">Waze and Google Maps, stop by stop</h2>
+  <p class="sec-sub">Neither app can import a whole route, so set the next stop as the destination each time: once you’re parked, tap <b>Waze</b> or <b>Google Maps</b>. Google Maps can also take a whole day in one link, with the stops along the way included. The stops keep the app on the planned roads, and each fuel stop is on your side of the motorway. Tapped stops turn grey, so you can see where you are.</p>
+  <div class="wz-wrap" id="waze">
+  <div class="wz-day"><h3>Tue 10 · Siracusa → Bari</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=41.119937,16.867833&amp;travelmode=driving&amp;waypoints=38.205945,15.560853%7C39.760898,16.462152%7C40.359453,16.778189&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=38.205945,15.560853+to:39.760898,16.462152+to:40.359453,16.778189+to:41.119937,16.867833&amp;directionsmode=driving">Whole day in Google Maps with 3 stops</a></div>
+  <ol class="wz">
+    <li class="" data-i="1"><span class="wz-n">1</span><div class="wz-txt"><b>Messina ferry, Caronte &amp; Tourist</b><small>Rada San Francesco, where cars board. Leave the <span class="rd">A18</span> at Messina Boccetta, go straight to the waterfront and follow the Caronte &amp; Tourist signs. Tremestieri is only for vehicles over 3.5 t.</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=38.205945,15.560853&amp;navigate=yes" aria-label="Open Messina ferry, Caronte and Tourist in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=38.205945,15.560853&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=38.205945,15.560853&amp;directionsmode=driving" aria-label="Open Messina ferry, Caronte and Tourist in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="2"><span class="wz-n">2</span><div class="wz-txt"><b>AM Carburanti, Sibari</b><small>Where the <span class="rd">SS106</span> coast road starts, lunch + LPG, 24/7</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=39.760898,16.462152&amp;navigate=yes" aria-label="Open AM Carburanti, Sibari in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=39.760898,16.462152&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=39.760898,16.462152&amp;directionsmode=driving" aria-label="Open AM Carburanti, Sibari in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="3"><span class="wz-n">3</span><div class="wz-txt"><b>Q8, Metaponto</b><small><span class="rd">SS106</span>, break + LPG, 24/7</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=40.359453,16.778189&amp;navigate=yes" aria-label="Open Q8, Metaponto in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=40.359453,16.778189&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=40.359453,16.778189&amp;directionsmode=driving" aria-label="Open Q8, Metaponto in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="4"><span class="wz-n">4</span><div class="wz-txt"><b>Park Battisti car park, Bari</b><small>Via Scipione Crisanzio 1/B, under Piazza Cesare Battisti. <b>Park on level −1</b>, since LPG isn’t allowed on −2 or −3. Then walk 5 minutes to Apartment Andromeda, Via Melo da Bari 205. If the app heads for the Castello Svevo or Corso Vittorio Emanuele, don’t follow it: that’s the ZTL.</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=41.119937,16.867833&amp;navigate=yes" aria-label="Open Park Battisti car park, Bari in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=41.119937,16.867833&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=41.119937,16.867833&amp;directionsmode=driving" aria-label="Open Park Battisti car park, Bari in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Wed 11 · Bari → Assisi</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=43.060794,12.617317&amp;travelmode=driving&amp;waypoints=43.279124,13.665864&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=43.279124,13.665864+to:43.060794,12.617317&amp;directionsmode=driving">Whole day in Google Maps with 1 stop</a></div>
+  <ol class="wz">
+    <li class="" data-i="5"><span class="wz-n">5</span><div class="wz-txt"><b>Area di servizio Chienti Nord</b><small><span class="rd">SS77</span> just past Civitanova Marche, lunch + LPG (Enilive)</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=43.279124,13.665864&amp;navigate=yes" aria-label="Open Area di servizio Chienti Nord in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=43.279124,13.665864&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=43.279124,13.665864&amp;directionsmode=driving" aria-label="Open Area di servizio Chienti Nord in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="6"><span class="wz-n">6</span><div class="wz-txt"><b>B&amp;B Cantico delle Creature, Assisi</b><small>Via Cantico delle Creature 5, below the town on the south-east side. Free parking at the B&amp;B. <b>Navigate here, never to the Basilica.</b> Don’t drive through the town gates: inside them is the ZTL.</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=43.060794,12.617317&amp;navigate=yes" aria-label="Open BandB Cantico delle Creature, Assisi in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=43.060794,12.617317&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=43.060794,12.617317&amp;directionsmode=driving" aria-label="Open BandB Cantico delle Creature, Assisi in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Thu 12 · Assisi → Villach</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=46.597500,13.829700&amp;travelmode=driving&amp;waypoints=44.029558,11.226015%7C45.881748,13.259468&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=44.029558,11.226015+to:45.881748,13.259468+to:46.597500,13.829700&amp;directionsmode=driving">Whole day in Google Maps with 2 stops</a></div>
+  <ol class="wz">
+    <li class="" data-i="7"><span class="wz-n">7</span><div class="wz-txt"><b>Area di Aglio est</b><small><span class="rd">A1</span>, north of Florence, coffee</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=44.029558,11.226015&amp;navigate=yes" aria-label="Open Area di Aglio est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=44.029558,11.226015&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=44.029558,11.226015&amp;directionsmode=driving" aria-label="Open Area di Aglio est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="8"><span class="wz-n">8</span><div class="wz-txt"><b>Gonars Sud</b><small><span class="rd">A4</span>, before Palmanova, full LPG fill (Eni), the last cheap LPG before Austria</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=45.881748,13.259468&amp;navigate=yes" aria-label="Open Gonars Sud in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=45.881748,13.259468&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=45.881748,13.259468&amp;directionsmode=driving" aria-label="Open Gonars Sud in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="9"><span class="wz-n">9</span><div class="wz-txt"><b>Motel55, Villach-Warmbad</b><small>Hotel, self check-in</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=46.597500,13.829700&amp;navigate=yes" aria-label="Open Motel55, Villach-Warmbad in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=46.597500,13.829700&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=46.597500,13.829700&amp;directionsmode=driving" aria-label="Open Motel55, Villach-Warmbad in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Fri 13 · Villach → Olomouc</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=49.570322,17.252423&amp;travelmode=driving&amp;waypoints=47.079570,15.957281%7C48.806774,16.627375&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=47.079570,15.957281+to:48.806774,16.627375+to:49.570322,17.252423&amp;directionsmode=driving">Whole day in Google Maps with 2 stops</a></div>
+  <ol class="wz">
+    <li class="" data-i="10"><span class="wz-n">10</span><div class="wz-txt"><b>PRORast Ilz</b><small><span class="rd">A2</span> exit 138/139, past Graz, LPG, 24/7. It keeps Waze on the <span class="rd">A2</span> over the Pack.</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=47.079570,15.957281&amp;navigate=yes" aria-label="Open PRORast Ilz in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=47.079570,15.957281&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=47.079570,15.957281&amp;directionsmode=driving" aria-label="Open PRORast Ilz in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="11"><span class="wz-n">11</span><div class="wz-txt"><b>Maroli, Mikulov</b><small>Czechia, just past the border, lunch + LPG, 24/7</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=48.806774,16.627375&amp;navigate=yes" aria-label="Open Maroli, Mikulov in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=48.806774,16.627375&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=48.806774,16.627375&amp;directionsmode=driving" aria-label="Open Maroli, Mikulov in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="12"><span class="wz-n">12</span><div class="wz-txt"><b>Penzion U Klásků, Olomouc</b><small>Slavonínská 59, hotel</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=49.570322,17.252423&amp;navigate=yes" aria-label="Open Penzion U Klásků, Olomouc in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=49.570322,17.252423&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=49.570322,17.252423&amp;directionsmode=driving" aria-label="Open Penzion U Klásků, Olomouc in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Sat 14 · Olomouc → Łomża</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=53.173742,22.043896&amp;travelmode=driving&amp;waypoints=50.075077,18.664594&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=50.075077,18.664594+to:53.173742,22.043896&amp;directionsmode=driving">Whole day in Google Maps with 1 stop</a></div>
+  <ol class="wz">
+    <li class="" data-i="13"><span class="wz-n">13</span><div class="wz-txt"><b>MOP Rowień Wschód, BP</b><small><span class="rd">A1</span>, just inside Poland, coffee + LPG, 24/7</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=50.075077,18.664594&amp;navigate=yes" aria-label="Open MOP Rowień Wschód, BP in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=50.075077,18.664594&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=50.075077,18.664594&amp;directionsmode=driving" aria-label="Open MOP Rowień Wschód, BP in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="14"><span class="wz-n">14</span><div class="wz-txt"><b>M&amp;W Hotel Wronowski, Łomża</b><small>Hotel</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=53.173742,22.043896&amp;navigate=yes" aria-label="Open MandW Hotel Wronowski, Łomża in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=53.173742,22.043896&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=53.173742,22.043896&amp;directionsmode=driving" aria-label="Open MandW Hotel Wronowski, Łomża in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Sun 15 · Łomża → Riga</h3><a class="wz-all" href="https://www.google.com/maps/dir/?api=1&amp;destination=56.949600,24.105200&amp;travelmode=driving&amp;waypoints=53.997849,22.826445&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=53.997849,22.826445+to:56.949600,24.105200&amp;directionsmode=driving">Whole day in Google Maps with 1 stop</a></div>
+  <ol class="wz">
+    <li class="" data-i="15"><span class="wz-n">15</span><div class="wz-txt"><b>MOP Rudniki Południe, Orlen</b><small><span class="rd">S61</span>, before Suwałki, LPG, 24/7</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=53.997849,22.826445&amp;navigate=yes" aria-label="Open MOP Rudniki Południe, Orlen in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=53.997849,22.826445&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=53.997849,22.826445&amp;directionsmode=driving" aria-label="Open MOP Rudniki Południe, Orlen in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="16"><span class="wz-n">16</span><div class="wz-txt"><b>Riga</b><small>or use <i>Home</i> in the app</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=56.949600,24.105200&amp;navigate=yes" aria-label="Open Riga in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=56.949600,24.105200&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=56.949600,24.105200&amp;directionsmode=driving" aria-label="Open Riga in Google Maps">Google Maps</a></div></li>
+  </ol>
+  </div>
+  <div class="ref">
+    <div>
+      <h3>Set up Waze once</h3>
+      <ul>
+        <li><b>Settings → Navigation:</b> allow toll roads and ferries, and don’t avoid highways.</li>
+        <li><b>Settings → Navigation → Toll passes / Vignettes:</b> add the <b>Austria</b> and <b>Czech Republic</b> vignettes, or Waze may send you off the motorway there.</li>
+        <li><b>Settings → Gas stations:</b> set the preferred fuel to <b>LPG</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Set up Google Maps once</h3>
+      <ul>
+        <li>On the route screen, tap <b>⋯ → Route options</b> and make sure tolls, highways and ferries <b>aren’t avoided</b>.</li>
+        <li>Download offline maps for Italy, Austria, Czechia, Poland and the Baltics, in case you lose signal.</li>
+        <li>Send this file to your phone by AirDrop, email or Telegram and open it there. The buttons open the apps.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-stages" style="gap:0">
+<h2 class="sec-h" id="h-stages" style="margin-bottom:4px">Stage by stage</h2>
+<p class="fine" style="margin-top:6px">Times assume OpenStreetMap routing plus 10% on motorways and 15% on the <span class="rd">SS106</span>, a 15-minute break about every two hours and a 30-minute lunch. Prices are Booking.com rates for two adults in one room. Ratings are guest review scores.</p>
+<div class="stages">
+
+<!-- STAGE 1 -->
+<article class="stage s" id="stage-1">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Tue</span><span class="dom">10</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 1 <i class="cc">I</i> · St Nicholas</p>
+      <h2>Siracusa → Messina → Sibari → Bari</h2>
+      <p class="meta"><span><b>602 km</b> + ferry</span><span>≈8 h at the wheel</span><span>sunrise 06:32</span><span>sunset 16:39 Bari</span></p>
+    </div>
+  </header>
+  <p class="lede">The long day. Leave at first light, cross the Strait, and take the toll-free <span class="rd">A2</span> through Calabria to Sibari. From there the <span class="rd">E90</span> runs along the Ionian coast past Trebisacce and Policoro to Metaponto, and you go inland to Bari. You arrive before sunset and walk to the <b>Basilica di San Nicola</b> in the evening; it’s open until about 20:30.</p>
+  <ol class="plan">
+    <li><time>06:00</time><div>Leave Siracusa with both tanks full. <span class="rd">A18</span> past Catania to Messina.<small>Dawn is 06:04 and sunrise 06:32, so it’s light before Catania.</small></div></li>
+    <li class="key"><time>08:05</time><div><b>Messina.</b> Caronte &amp; Tourist to Villa San Giovanni. Buy a ticket at the booth (car ≈€46). Tell the crew you have LPG and drive on using petrol.<small>Cars board at Rada San Francesco: leave the A18 at Messina Boccetta, go straight to the waterfront and follow the Caronte &amp; Tourist signs. Boats leave Messina at 08:00, 08:40 and 09:20; arriving at about 08:05 you’ll make the 08:40 and be off in Villa by about 09:10. Leave Siracusa at 05:50 to catch the 08:00.</small></div></li>
+    <li><time>09:05</time><div>North on the <span class="rd">A2</span>, toll-free.</div></li>
+    <li><time>11:15</time><div>Coffee and a GPL top-up near Cosenza.</div></li>
+    <li><time>12:25</time><div>Sibari: lunch, then the <span class="rd">SS106</span> (<span class="rd">E90</span>) along the coast.</div></li>
+    <li><time>14:15</time><div>Break at Metaponto, then inland past Gioia del Colle to Bari.</div></li>
+    <li class="key"><time>16:05</time><div><b>Bari, without entering the ZTL.</b> Navigate to <b>Park Battisti, Via Scipione Crisanzio 1/B</b>, the underground car park under Piazza Cesare Battisti, south of the old town. Don’t set the apartment or the Basilica as the destination. Take a ticket and <b>park on level −1</b>: LPG cars aren’t allowed on levels −2 and −3. Then walk 5 minutes to Apartment Andromeda at Via Melo da Bari 205. Don’t drive towards the Castello Svevo or along Corso Vittorio Emanuele.<small>The car park is open 24/7. It costs €2 an hour, capped at €20 for 24 hours; pay at the machines before collecting the car, or by card at the exit barrier.</small></div></li>
+    <li class="key"><time>16:30</time><div><b>Walk to the Basilica di San Nicola</b>, 17 minutes from the apartment through the Murat district into Bari Vecchia. Entry is free. The crypt with the saint’s tomb is down the stairs on either side of the altar. Cover shoulders and knees. Afterwards, stay for dinner in Bari Vecchia.<small>Too tired tonight? Go at 07:00 on Wednesday instead and leave Bari around 08:15.</small></div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Sleep · Bari, outside the ZTL</h3>
+      <ul>
+        <li><b>Booked:</b> <a class="opt" href="https://www.booking.com/hotel/it/apartment-andromeda-bari.html">Apartment Andromeda</a>, Via Melo da Bari 205. <span class="why">Deluxe double room (25 m²) with its own kitchen, 9.7/10 from 676 reviews. Self check-in 15:00–00:00, and check-out from 01:00, so a 07:30 start is no problem. 17 minutes’ walk to the Basilica. Follow the host’s check-in instructions.</span></li>
+        <li><b>Car: Park Battisti</b>, Via Scipione Crisanzio 1/B, under Piazza Cesare Battisti, 5 minutes’ walk from the apartment. <span class="why">Underground, open 24/7, with staff on the intercom around the clock (Interparking/Gestipark, +39 080 990 99 08). It costs €2 an hour, capped at €20 for 24 hours. <b>Park on level −1</b>: the car park’s posted rules bar LPG and methane cars from levels −2 and −3. If level −1 is full, ask on the intercom rather than going lower.</span></li>
+        <li class="gone"><b>Gone:</b> Rosabella Visconti and Il Pumo sold out on 9 Nov. <b>Avoid:</b> Garage Calefati, Via Calefati 406, which bans LPG cars.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Bari ZTL</h3>
+      <ul>
+        <li><b>Bari Vecchia is closed to visitors’ cars around the clock.</b> It has camera gates and no visitor permits. The square around the Basilica is pedestrian.</li>
+        <li>A new camera gate opened on 1 July 2026 by the Castello Svevo, between Piazza Federico II di Svevia and Piazza Massari.</li>
+        <li>Fines start around €80 per gate pass and are sent to foreign plates. The apartment and Park Battisti are both outside the zone. The drive to the car park from the south was checked and doesn’t enter the old town.</li>
+      </ul>
+    </div>
+    <div class="note fuel">
+      <h3>Fuel and tolls</h3>
+      <ul>
+        <li>Leave full. The <span class="rd">A2</span> has GPL at several service areas; top up near Cosenza.</li>
+        <li>Keep a quarter tank of petrol for the ferry.</li>
+        <li><b>Tolls:</b> only the <span class="rd">A18</span> (≈€4). The <span class="rd">A2</span> and <span class="rd">SS106</span> are free.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li>About 10 hours on the road, but all motorway or expressway except the <span class="rd">SS106</span> coastal stretch.</li>
+        <li>Basilica hours vary by source (about 07:00–20:30). Call +39 080 573 7111 to confirm.</li>
+        <li>Puglia food: braciole and ragù are beef or horse. Focaccia, panzerotti and seafood are safe.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 2 -->
+<article class="stage s" id="stage-2">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Wed</span><span class="dom">11</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 2 <i class="cc">I</i> · St Francis</p>
+      <h2>Bari → Pescara → Foligno → Assisi</h2>
+      <p class="meta"><span><b>540 km</b></span><span>≈6½ h at the wheel</span><span>sunrise 06:35</span><span>sunset 16:50 Assisi</span></p>
+    </div>
+  </header>
+  <p class="lede">Up the Adriatic on the <span class="rd">A14</span> to Civitanova Marche. Then the <span class="rd">SS77</span>, four-lane and toll-free, runs inland through the Apennines to Foligno, and the <span class="rd">SS75</span> brings you to the foot of Assisi. You stay below the town, outside the walls, and walk up past the tomb of St Clare to the tomb of St Francis.</p>
+  <ol class="plan">
+    <li><time>07:30</time><div>Leave Bari; <span class="rd">A14</span> north. Fill with GPL at the first service area.</div></li>
+    <li><time>09:50</time><div>Coffee near Termoli.</div></li>
+    <li><time>12:25</time><div>Lunch near Civitanova Marche, then the <span class="rd">SS77</span> west.</div></li>
+    <li class="key"><time>14:35</time><div><b>Assisi, without entering the ZTL.</b> Navigate to <b>B&amp;B Cantico delle Creature, Via Cantico delle Creature 5</b>, below the town on the south-east side. Don’t set the Basilica as the destination. Park free at the B&amp;B; check-in is 14:00–20:00.</div></li>
+    <li class="key"><time>15:00</time><div><b>Walk up to the Basilica di San Francesco</b>, about 30 minutes. After 15 minutes you pass the <b>Basilica di Santa Chiara</b>, with the tomb of St Clare in its crypt and the San Damiano crucifix. Then follow Corso Mazzini, cross the Piazza del Comune and go down Via San Francesco. The tomb of St Francis is in the crypt below the Lower Basilica. See the Upper Basilica first, with Giotto’s frescoes, because it closes earlier in winter (about 17:45).<small>Rather not walk back in the dark? Drive 4 minutes up to the open-air Parcheggio Porta Nuova (paid) instead; it’s 21 minutes on foot from there, and an open-air car park is no problem for LPG.</small></div></li>
+    <li><time>Evening</time><div>Dinner around the Piazza del Comune on the way back, then about 25 minutes down to the B&amp;B. Sunset is 16:50, so take a torch for the stretch below Porta Nuova.</div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Sleep · Assisi, outside the ZTL</h3>
+      <ul>
+        <li><b>Booked:</b> <a class="opt" href="https://www.booking.com/hotel/it/b-amp-b-cantico-delle-creature.html">B&amp;B Cantico delle Creature</a>, Via Cantico delle Creature 5. <span class="why">9.2/10 from 721 reviews. Continental buffet breakfast, garden and infinity pool. <b>Free private parking on site.</b> Check-in 14:00–20:00, check-out from 07:30.</span></li>
+        <li><b>On foot:</b> <span class="why">15 minutes up to Santa Chiara and 29 minutes to St Francis. Coming back is mostly downhill.</span></li>
+        <li><b>Thursday:</b> <span class="why">ask the host whether breakfast can be at 07:00, or packed, so you can still leave at 07:30.</span></li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Assisi ZTL</h3>
+      <ul>
+        <li><b>The walled centre is a ZTL</b>, with fines of about €92. The B&amp;B and the Porta Nuova car park are outside the walls. The drive to both from the <span class="rd">SS75</span> was checked and doesn’t enter the walled town.</li>
+        <li>The Monastero Sant’Andrea and the B&amp;Bs on Via San Francesco are inside the walls, so they were left out.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>St Francis</h3>
+      <ul>
+        <li>2026 is the 800th anniversary of his death. The relics were displayed in February and March; check that the crypt is open as usual.</li>
+        <li>Published hours vary: the Lower Basilica is open roughly 06:00–18:30, the Upper Basilica until about 17:45 in winter. Call +39 075 819001.</li>
+      </ul>
+    </div>
+    <div class="note fuel">
+      <h3>Fuel and tolls</h3>
+      <ul>
+        <li>Fill up on the <span class="rd">A14</span>, and again near Foligno or Assisi this evening.</li>
+        <li><b>Tolls:</b> about €30 on the <span class="rd">A14</span>. The <span class="rd">SS77</span> and <span class="rd">SS75</span> are free.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 3 -->
+<article class="stage s" id="stage-3">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Thu</span><span class="dom">12</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 3 <i class="cc">I</i><i class="cc">A</i> · over the Alps</p>
+      <h2>Assisi → Florence → Bologna → Villach</h2>
+      <p class="meta"><span><b>657 km</b></span><span>≈7¾ h at the wheel</span><span>sunrise 06:58</span><span>sunset 16:35 Villach</span></p>
+    </div>
+  </header>
+  <p class="lede">Past Perugia to the <span class="rd">A1</span>, over the Apennines to Bologna, then the <span class="rd">A13</span>, <span class="rd">A4</span> and <span class="rd">A23</span> up the Canal Valley to Tarvisio. You cross into Austria in the afternoon and stop on the edge of Villach before sunset.</p>
+  <ol class="plan">
+    <li><time>07:30</time><div>Leave after breakfast; past Perugia to the <span class="rd">A1</span>.</div></li>
+    <li><time>09:35</time><div>Coffee north of Florence.</div></li>
+    <li><time>11:35</time><div>Lunch near Ferrara, then the <span class="rd">A13</span> to Padova and the <span class="rd">A4</span> east.</div></li>
+    <li><time>14:30</time><div>Coffee and a full GPL fill near Udine. It’s the last cheap LPG before Austria.</div></li>
+    <li><time>15:50</time><div>Into Austria at Tarvisio. The vignette applies from here.</div></li>
+    <li class="key"><time>16:10</time><div><b>Villach-Warmbad.</b> Sunset is 16:35.</div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Sleep · Villach</h3>
+      <ul>
+        <li><a class="opt" href="https://www.booking.com/hotel/at/roomrent55.html">Motel55</a>, Warmbader Allee 55. <span class="why"><b>Available:</b> €98 with free cancellation until 9 Nov (or €93, reschedulable). Self check-in until 00:00, free parking, 8.8/10 from 808 reviews. No restaurant, so buy dinner and breakfast on the way.</span></li>
+      </ul>
+    </div>
+    <div class="note fuel">
+      <h3>Fuel and tolls</h3>
+      <ul>
+        <li>Fill near Udine. BP Arnoldstein, just past the border, is the Austrian backup (06:00–22:00).</li>
+        <li><b>Tolls:</b> about €45 (<span class="rd">A1</span>, <span class="rd">A13</span>, <span class="rd">A4</span>, <span class="rd">A23</span>).</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li><b>Austrian vignette:</b> the 10-day digital one (€12.80) covers Thursday and Friday.</li>
+        <li>Austria requires winter tyres in wintry conditions, so check the Tarvisio forecast on Wednesday evening.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 4 -->
+<article class="stage" id="stage-4">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Fri</span><span class="dom">13</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 4 <i class="cc">A</i><i class="cc">CZ</i></p>
+      <h2>Villach → Graz → Vienna → Olomouc</h2>
+      <p class="meta"><span><b>566 km</b></span><span>≈7¼ h at the wheel</span><span>sunrise 07:03</span><span>sunset 16:11 Olomouc</span></p>
+    </div>
+  </header>
+  <p class="lede">The <span class="rd">A2</span> over the Pack and past Graz, around Vienna, then Mikulov and Brno. The <span class="rd">D46</span> takes you to Olomouc, a Moravian town with St Wenceslas Cathedral and the Holy Trinity Column. You sleep on its southern edge.</p>
+  <ol class="plan">
+    <li><time>07:30</time><div>Leave; <span class="rd">A2</span> east past Klagenfurt and over the Pack (about 1,060 m) in daylight.</div></li>
+    <li><time>10:20</time><div>Coffee and an LPG top-up at PRORast Ilz (24/7), by <span class="rd">A2</span> exits 138/139.</div></li>
+    <li><time>12:15</time><div>Past Vienna on the <span class="rd">A23</span> → <span class="rd">S2</span> → <span class="rd">S1</span>, then the <span class="rd">A5</span> north. Friday midday traffic can be heavy here.</div></li>
+    <li><time>13:25</time><div>Mikulov: lunch and a full LPG fill. The Czech vignette applies from here.</div></li>
+    <li class="key"><time>15:30</time><div><b>Olomouc-Slavonín.</b> Sunset is 16:11.</div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Sleep · Olomouc</h3>
+      <ul>
+        <li><a class="opt" href="https://www.booking.com/hotel/cz/restaurace-a-penzion-u-klasku.html">Restaurace a Penzion U Klásků</a>, Slavonínská 59. <span class="why"><b>Available:</b> €90 for a deluxe double with balcony and breakfast. Free cancellation until 11 Nov, pay at the property. Restaurant, free parking, 9.3/10 from 1,184 reviews.</span></li>
+        <li>The old town is about 3 km away if you’d like an evening at the cathedral.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li><b>Czech vignette:</b> you use Czech motorways on Friday <i>and</i> Saturday morning, so buy the 10-day one (CZK 300) at <a href="https://edalnice.gov.cz/en/price-list">edalnice.gov.cz</a>.</li>
+        <li>Czechia requires winter tyres from 1 November when there’s snow or ice.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 5 -->
+<article class="stage" id="stage-5">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Sat</span><span class="dom">14</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 5 <i class="cc">CZ</i><i class="cc">PL</i> · Via Baltica</p>
+      <h2>Olomouc → Ostrava → Warsaw → Łomża</h2>
+      <p class="meta"><span><b>628 km</b></span><span>≈6¾ h at the wheel</span><span>sunrise 07:00</span><span>sunset 15:38 Łomża</span></p>
+    </div>
+  </header>
+  <p class="lede">The <span class="rd">D35</span> and <span class="rd">D1</span> to Ostrava and the Polish border, the <span class="rd">A1</span> north, Warsaw on a Saturday, and the <span class="rd">S61</span> Via Baltica to Łomża.</p>
+  <ol class="plan">
+    <li><time>07:15</time><div>Leave after breakfast; <span class="rd">D35</span> → <span class="rd">D1</span> to Ostrava.</div></li>
+    <li><time>08:25</time><div>Into Poland at Gorzyczki. Coffee and a full LPG fill at the first station.</div></li>
+    <li><time>11:00</time><div>Break near Piotrków.</div></li>
+    <li><time>12:50</time><div>Through Warsaw on the <span class="rd">S8</span>, then lunch north of the city.</div></li>
+    <li class="key"><time>15:05</time><div><b>Łomża.</b> Sunset is 15:38.</div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Sleep · Łomża</h3>
+      <ul>
+        <li><a class="opt" href="https://www.booking.com/hotel/pl/m-amp-w-wronowski.html">M&amp;W Hotel Wronowski</a>, Poznańska 21. <span class="why"><b>Available:</b> €71 for a twin with breakfast (served 07:00–10:00). Free cancellation until 13 Nov, pay at the hotel. Free parking, 9.2/10 from 1,507 reviews.</span></li>
+        <li><b>Backup:</b> <a class="opt" href="https://www.booking.com/hotel/pl/pensjonat-retro.html">Pensjonat Retro</a>, Nowogrodzka 157. <span class="why">€71 with breakfast, 24-hour desk, restaurant, free cancellation, 8.7/10 from 2,907 reviews.</span></li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Evening</h3>
+      <ul>
+        <li><b>Buy Sunday’s breakfast and supplies today.</b> Polish shops are shut on most Sundays; fuel stations stay open.</li>
+        <li>Fill up with cheap Polish LPG (≈€0.69) before you check in.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 6 -->
+<article class="stage" id="stage-6">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Sun</span><span class="dom">15</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 6 <i class="cc">PL</i><i class="cc">LT</i><i class="cc">LV</i> · home</p>
+      <h2>Łomża → Kaunas → Riga</h2>
+      <p class="meta"><span><b>527 km</b></span><span>≈7¼ h at the wheel</span><span>sunrise 06:55 Łomża</span><span>sunset 16:12 Riga</span></p>
+    </div>
+  </header>
+  <p class="lede">The last run on the Via Baltica: Ełk, Suwałki, into Lithuania at Budzisko, past Kaunas and Panevėžys, and over the Latvian border at Grenctāle. Leave at sunrise, because this is the tightest day. Times are Polish until the border, then Baltic, one hour ahead.</p>
+  <ol class="plan">
+    <li><time>07:00</time><div>Leave at sunrise (Polish time), with breakfast in the room. The hotel’s breakfast starts at 07:00, and waiting for it puts you into Riga about 20 minutes after sunset.</div></li>
+    <li><time>08:40</time><div>Suwałki: LPG fill and coffee.</div></li>
+    <li class="key"><time>09:25</time><div><b>Into Lithuania at Budzisko–Kalvarija. Set clocks forward one hour</b>: it’s 10:25 in Lithuania. Times from here on are Baltic.</div></li>
+    <li><time>11:25</time><div>Lunch in Kaunas.</div></li>
+    <li><time>13:30</time><div>Short coffee stop near Panevėžys.</div></li>
+    <li class="key"><time>16:15</time><div><b>Riga</b>, at sunset. Light lasts until about 16:55.</div></li>
+  </ol>
+  <div class="notes">
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li><b>Winter tyres are compulsory in Lithuania from 10 November</b> (M+S or snowflake marking). Latvia’s rule starts on 1 December.</li>
+        <li>Lithuania’s motorway limit is 110 km/h from November to March.</li>
+        <li>After dark near Riga, watch for deer and elk on the single-carriageway stretches.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+</div>
+</section>
+
+<section class="block" aria-labelledby="h-food">
+  <h2 class="sec-h" id="h-food">Eating without red meat</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Where</th><th>Hidden red meat</th><th>Say</th></tr></thead>
+      <tbody>
+        <tr><td><i class="cc">I</i> south</td><td>Calabria: ’nduja and soppressata (pork). Puglia: braciole and ragù (beef or horse). Focaccia, panzerotti, orecchiette with cime di rapa and seafood are safe.</td><td><em>Niente carne rossa, per favore. Pollo o pesce va bene.</em></td></tr>
+        <tr><td><i class="cc">I</i> Umbria</td><td>Cured pork everywhere; porchetta; strangozzi with sausage. Trout, chicken and truffle pasta are common alternatives.</td><td><em>Niente carne rossa.</em></td></tr>
+        <tr><td><i class="cc">A</i></td><td>Speck; soups made with beef broth. Backhendl is fried chicken.</td><td><em>Kein rotes Fleisch, bitte.</em></td></tr>
+        <tr><td><i class="cc">CZ</i> <i class="cc">PL</i></td><td>Guláš, svíčková; żurek (sausage), bigos, pierogi z mięsem. Pierogi ruskie are potato and cheese.</td><td><em>Nie jem czerwonego mięsa, tylko drób i ryby.</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-costs">
+  <h2 class="sec-h" id="h-costs">Trip costs</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Where</th><th class="num">Approx.</th></tr></thead>
+      <tbody>
+        <tr><td>Hotels, 5 nights</td><td>Bari €95–105, Assisi as booked, Villach €98, Olomouc €90, Łomża €71</td><td class="num">€354–364 + Assisi</td></tr>
+        <tr><td>Bari car park</td><td>Park Battisti, about 15 hours at €2 an hour, capped at €20; free parking at the other four</td><td class="num">≈€20</td></tr>
+        <tr><td>Strait of Messina ferry</td><td>Caronte &amp; Tourist</td><td class="num">€46–55</td></tr>
+        <tr><td>Autostrada tolls</td><td><span class="rd">A18</span>, <span class="rd">A14</span>, <span class="rd">A1</span>, <span class="rd">A13</span>, <span class="rd">A4</span>, <span class="rd">A23</span>; the <span class="rd">A2</span>, <span class="rd">SS106</span>, <span class="rd">SS77</span> and <span class="rd">SS75</span> are free. Estimate.</td><td class="num">≈€80</td></tr>
+        <tr><td>Digital vignette, 10 days</td><td>Austria · Thu 12–Fri 13</td><td class="num">€12.80</td></tr>
+        <tr><td>e-vignette, 10 days</td><td>Czechia · Fri 13–Sat 14</td><td class="num">CZK 300 ≈ €12</td></tr>
+        <tr><td>Fuel</td><td>3,520 km at about 10 L of LPG per 100 km</td><td class="num">€275–325</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="2">Whole drive home, excluding meals</td><td class="num">≈€800–865 + Assisi</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-kit">
+  <h2 class="sec-h" id="h-kit">Rules of the road</h2>
+  <div class="ref">
+    <div>
+      <h3>Restricted zones (ZTL)</h3>
+      <ul>
+        <li>Bari Vecchia and walled Assisi are closed to visitors’ cars, with camera gates and fines from about €80–92.</li>
+        <li>Your satnav doesn’t know about the ZTL. Navigate to the hotel or garage address, never to the church.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Winter tyres</h3>
+      <ul>
+        <li><i class="cc">LT</i> <b>compulsory from 10 November</b>. You cross on Sunday the 15th.</li>
+        <li><i class="cc">A</i> <i class="cc">CZ</i> whenever there’s snow, slush or ice. <i class="cc">I</i> from 15 November, after you’ve left. <i class="cc">LV</i> from 1 December.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Speed limits</h3>
+      <ul>
+        <li><i class="cc">I</i> 130, <b>110 in rain</b>; the <span class="rd">SS106</span> mostly 70–90. <i class="cc">A</i> <i class="cc">CZ</i> 130. <i class="cc">PL</i> 140, expressways 120. <i class="cc">LT</i> 110 from November.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>In the car</h3>
+      <ul>
+        <li>Triangle, first-aid kit, vests, and a <b>fire extinguisher</b> (Lithuania and Poland). Dipped headlights on in the daytime.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-before">
+  <h2 class="sec-h" id="h-before">Before you go</h2>
+  <p class="sec-sub">Ticks are saved in this browser only.</p>
+  <ul class="check" id="checklist">
+    <li><label for="ck-1"><input type="checkbox" id="ck-1"><span><b>Book the other three hotels</b>: Villach, Olomouc and Łomża. Bari and Assisi are booked. Motel55’s free-cancellation date (9 Nov) has passed, so check it’s still available.</span></label></li>
+    <li><label for="ck-2"><input type="checkbox" id="ck-2"><span><b>Bari:</b> set <b>Park Battisti, Via Scipione Crisanzio 1/B</b> as the navigation destination, not the apartment. Park on <b>level −1</b>, since LPG cars aren’t allowed lower. Keep the parking ticket, and pay at the machine before collecting the car on Wednesday morning. <b>Assisi:</b> ask the B&amp;B host whether breakfast can be at 07:00 on Thursday, or packed, since you leave at 07:30.</span></label></li>
+    <li><label for="ck-3"><input type="checkbox" id="ck-3"><span>Call both basilicas to confirm the hours: San Nicola +39 080 573 7111, San Francesco +39 075 819001.</span></label></li>
+    <li><label for="ck-4"><input type="checkbox" id="ck-4"><span><b>Check the tyres.</b> Lithuania requires winter tyres from 10 November.</span></label></li>
+    <li><label for="ck-5"><input type="checkbox" id="ck-5"><span>Buy the Austrian 10-day digital vignette from 12 Nov at the <a href="https://shop.asfinag.at/en/">ASFINAG shop</a>, and the <b>Czech 10-day</b> e-vignette from 13 Nov at <a href="https://edalnice.gov.cz/en/price-list">edalnice.gov.cz</a>.</span></label></li>
+    <li><label for="ck-6"><input type="checkbox" id="ck-6"><span>Monday: fill both tanks in Siracusa, pack breakfast for a 06:00 start. The ferry was checked on 9 Nov: cars board at Rada San Francesco (A18 exit Messina Boccetta), with boats at 08:00, 08:40 and 09:20.</span></label></li>
+    <li><label for="ck-7"><input type="checkbox" id="ck-7"><span>Wednesday evening: check the Tarvisio and Pack forecast.</span></label></li>
+    <li><label for="ck-8"><input type="checkbox" id="ck-8"><span>Saturday in Łomża: buy Sunday’s breakfast; Polish shops are shut on Sunday.</span></label></li>
+  </ul>
+</section>
+
+<footer>
+  <p>Distances and wheel times come from OpenStreetMap routing (OSRM), plus 10% on motorways and 15% on the <span class="rd">SS106</span>. Walking times use OpenStreetMap foot routing, and each hotel’s drive was checked to stay outside the old-town zones. Sunrise and sunset are calculated for each start and end town. Hotels and prices were checked on Booking.com on 7 November 2026 for these dates. Basilica hours and ZTL details come from tourism and news sources that disagree slightly. Tolls are estimates. Confirm before you book.</p>
+  <p>Faster alternative: <a href="fast.html">4 days via the A2 and A1</a>.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY="siracusa-riga-bari-assisi-6d-checklist-v1";
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll("#checklist input[type=checkbox]");
+  boxes.forEach(function(b){
+    if(saved[b.id]) b.checked=true;
+    b.addEventListener("change",function(){
+      saved[b.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+    });
+  });
+})();
+</script>
+
+<script id="nav-js">
+(function(){
+  var iOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  if(iOS) document.querySelectorAll("a[data-ios]").forEach(function(a){a.href=a.getAttribute("data-ios");});
+  var KEY="siracusa-riga-bari-assisi-nav-v1",done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){done={};}
+  document.querySelectorAll("#waze li").forEach(function(li){
+    var i=li.getAttribute("data-i");
+    if(done[i]) li.classList.add("done");
+    li.querySelectorAll(".wz-go,.gm-go").forEach(function(a){a.addEventListener("click",function(){
+      li.classList.add("done");done[i]=1;
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(e){}
+    });});
+  });
+})();
+</script>
+</body></html>

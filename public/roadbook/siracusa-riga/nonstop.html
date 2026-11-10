@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Siracusa–Riga Non-stop</title>
+<meta name="description" content="Non-stop drive home from Sicily to Riga for one driver, 10–12 November 2026: two-hour stints, 20-minute naps and two 3-hour sleeps in the car at motorway stops, no hotels, with Waze links for every stop.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Overpass:ital,wght@0,400;0,600;0,700;1,400&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+/* Slow variant. Same system as the outbound Riga–Palermo road book: road-sign condensed display, map-legend mono, green = Italy, blue = the north. */
+:root{
+  --ground:#EDF0EF; --surface:#F8FAF9; --ink:#16212B; --ink-2:#4B5762; --ink-3:#76828C;
+  --line:#D2D8DB; --line-2:#A9B3BA;
+  --north:#1D4E8F; --south:#0D6A47; --fuel:#7F5300; --fuel-bg:#F3E5C0;
+  --asphalt:#2A3541; --sun:#F8EDC4; --twilight:#D3DAE3; --night:#A9B5C2;
+  --ferry:#2C6DB3; --grid:rgba(22,33,43,.16);
+  --seg-t1:#62799A; --seg-t2:#4E6D96; --seg-text:#FFFFFF;
+  --display:"Barlow Condensed","Arial Narrow","Helvetica Neue",sans-serif;
+  --body:"Overpass",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Overpass Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1318; --surface:#131B22; --ink:#E2E8EC; --ink-2:#A2AEB8; --ink-3:#7C8892;
+    --line:#26313B; --line-2:#3E4B56;
+    --north:#8CB0E6; --south:#5EC49B; --fuel:#E6B552; --fuel-bg:#2E2615;
+    --asphalt:#C9D2D9; --sun:#39331F; --twilight:#222B35; --night:#0A0F13;
+    --ferry:#74A9E8; --grid:rgba(226,232,236,.14);
+    --seg-t1:#7F93AB; --seg-t2:#97ABC4; --seg-text:#0D1318;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1318; --surface:#131B22; --ink:#E2E8EC; --ink-2:#A2AEB8; --ink-3:#7C8892;
+  --line:#26313B; --line-2:#3E4B56;
+  --north:#8CB0E6; --south:#5EC49B; --fuel:#E6B552; --fuel-bg:#2E2615;
+  --asphalt:#C9D2D9; --sun:#39331F; --twilight:#222B35; --night:#0A0F13;
+  --ferry:#74A9E8; --grid:rgba(226,232,236,.14);
+  --seg-t1:#7F93AB; --seg-t2:#97ABC4; --seg-text:#0D1318;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.page{max-width:52rem;margin:0 auto;padding-left:max(clamp(16px,4vw,36px),env(safe-area-inset-left,0px));padding-right:max(clamp(16px,4vw,36px),env(safe-area-inset-right,0px));padding-block:36px 72px}
+a{color:var(--north);text-underline-offset:2px;text-decoration-thickness:1px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,input:focus-visible{outline:2px solid var(--north);outline-offset:2px;border-radius:2px}
+p{margin:0}
+h1,h2,h3{text-wrap:balance}
+
+/* masthead */
+.masthead{display:grid;gap:14px;padding-block:0 26px;border-bottom:3px solid var(--ink)}
+.kicker{font:600 .75rem/1.2 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+h1{font:700 clamp(3rem,11vw,5.25rem)/.9 var(--display);letter-spacing:-.005em;margin:0}
+h1 .to{color:var(--north);font-weight:500;padding-inline:.08em}
+.dek{max-width:62ch;font-size:1.0625rem;color:var(--ink-2)}
+.facts{display:flex;flex-wrap:wrap;gap:6px 22px;font:400 .8125rem/1.4 var(--mono);color:var(--ink)}
+.facts b{font-weight:600}
+.status{display:grid;gap:4px;padding:14px 16px;border-left:4px solid var(--south);background:var(--surface);border-radius:0 6px 6px 0;font-size:.9375rem}
+.status b{font-weight:600}
+
+/* section scaffolding */
+section.block{padding-block:34px 6px;display:grid;gap:16px}
+.sec-h{font:600 1.875rem/1.05 var(--display);margin:0}
+.sec-sub{color:var(--ink-2);max-width:64ch}
+
+/* route strip */
+.strip-wrap{position:relative;padding-block:8px 8px}
+.strip{display:flex;gap:2px;height:30px}
+.strip i{flex:var(--km) 1 0;min-width:0;display:grid;place-items:center;font:700 .75rem/1 var(--display);letter-spacing:.04em;font-style:normal;overflow:hidden;color:var(--seg-text)}
+.strip .t{background:var(--seg-t1)}
+.strip .t:nth-child(even){background:var(--seg-t2)}
+.strip .a{background:var(--north)}
+.strip .sic{background:var(--south)}
+.strip .it{background:var(--south);margin-left:8px;position:relative;overflow:visible}
+.strip .it::before{content:"";position:absolute;left:-9px;top:50%;width:8px;border-top:2px dashed var(--ferry)}
+.marks{position:absolute;left:0;right:0;top:8px;height:30px;pointer-events:none}
+.marks b{position:absolute;top:-4px;height:38px;width:2px;background:var(--ink);transform:translateX(-1px)}
+.marks b::after{content:attr(data-n);position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font:600 .6875rem/1 var(--mono);color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font:400 .8125rem/1.4 var(--mono);color:var(--ink-2);padding-top:18px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.cc{display:inline-grid;place-items:center;min-width:2.1em;height:1.45em;padding-inline:.45em;border:1.5px solid var(--ink);border-radius:50%;font:700 .75rem/1 var(--display);letter-spacing:.03em;color:var(--ink);background:var(--surface)}
+.nights{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(11.5rem,1fr));gap:4px 18px;font-size:.9375rem}
+.nights li{display:flex;gap:8px;align-items:baseline;padding-block:5px;border-bottom:1px solid var(--line)}
+.nights .n{font:600 .75rem/1 var(--mono);min-width:1.1em;color:var(--ink-2)}
+.nights .km{margin-left:auto;font:400 .75rem/1 var(--mono);color:var(--ink-3)}
+
+/* daylight chart */
+.daylight{display:grid;gap:7px}
+.day-row,.axis{display:grid;grid-template-columns:3.7rem 1fr 7.2rem;gap:12px;align-items:center}
+.axis-in{position:relative;height:14px}
+.axis-in span{position:absolute;transform:translateX(-50%);font:400 .6875rem/1 var(--mono);color:var(--ink-3)}
+.axis-in span:first-child{transform:none}
+.axis-in span:last-child{transform:translateX(-100%)}
+.day-lbl{font:600 .8125rem/1 var(--mono)}
+.day-track{position:relative;height:24px;border-radius:3px;overflow:hidden}
+.day-track::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent calc(100% - 1px),var(--grid) calc(100% - 1px));background-size:calc(100% / 6) 100%;pointer-events:none}
+.day-track span{position:absolute;top:5px;bottom:5px;border-radius:2px}
+.seg-drive{background:var(--asphalt)}
+.seg-ferry{background:var(--ferry)}
+.seg-visit{box-shadow:inset 0 0 0 2px var(--south);background:color-mix(in srgb,var(--south) 22%,transparent)}
+.day-sun{font:400 .75rem/1.2 var(--mono);color:var(--ink-2);white-space:nowrap}
+.chart-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.8125rem;color:var(--ink-2)}
+.chart-legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{display:inline-block;width:22px;height:12px;border-radius:2px}
+.fine{font-size:.8125rem;color:var(--ink-2);max-width:68ch}
+.dark-sum{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:4px 18px;font-size:.9375rem}
+.dark-sum li{display:flex;gap:8px;align-items:baseline;padding-block:5px;border-bottom:1px solid var(--line)}
+.dark-sum .d{font:600 .75rem/1 var(--mono);color:var(--ink-2);min-width:3.2em}
+.dark-sum .v{margin-left:auto;font:400 .75rem/1 var(--mono);color:var(--ink-3);text-align:right}
+@media (max-width:540px){
+  .day-row,.axis{grid-template-columns:3.2rem 1fr;gap:4px 10px}
+  .axis>span:last-child{display:none}
+  .day-sun{grid-column:2;font-size:.6875rem;margin-top:-2px}
+}
+
+/* stages */
+.stages{display:grid}
+.stage{padding-block:40px 8px;border-top:1px solid var(--line-2);display:grid;gap:20px}
+.stage:first-child{border-top:0}
+.stage-head{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start}
+.stage-head>div{min-width:0}
+.date{display:grid;justify-items:center;width:4.4rem;padding:8px 4px 7px;border:2px solid currentColor;border-radius:7px;font-family:var(--display);line-height:1;color:var(--north)}
+.stage.s .date{color:var(--south)}
+.date .dow,.date .mon{font-weight:600;font-size:.8125rem;letter-spacing:.1em;text-transform:uppercase}
+.date .dom{font-weight:700;font-size:2.25rem;padding-block:2px;color:var(--ink)}
+.eyebrow{font:600 .75rem/1.3 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.stage h2{font:600 clamp(1.9rem,6vw,2.5rem)/1 var(--display);margin:6px 0 8px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 16px;font:400 .8125rem/1.4 var(--mono);color:var(--ink-2)}
+.meta b{font-weight:600;color:var(--ink)}
+.lede{max-width:64ch;font-size:1.0625rem}
+.rd{display:inline-block;font:600 .75rem/1 var(--mono);padding:3px 5px 2px;border:1.5px solid currentColor;border-radius:3px;white-space:nowrap;color:var(--north);vertical-align:1px}
+.stage.s .rd{color:var(--south)}
+.plan{list-style:none;margin:0;padding:0;display:grid;border-top:1px solid var(--line)}
+.plan li{display:grid;grid-template-columns:4.6rem 1fr;gap:14px;padding-block:9px;border-bottom:1px solid var(--line)}
+.plan li>div{min-width:0}
+.plan time{font:600 .875rem/1.65 var(--mono);font-variant-numeric:tabular-nums}
+.plan li.key time{color:var(--south)}
+.stage:not(.s) .plan li.key time{color:var(--north)}
+.plan small{display:block;color:var(--ink-2);font-size:.875rem}
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(17rem,1fr));gap:18px 30px;align-items:start}
+.note{min-width:0}
+.note h3{font:600 .75rem/1.2 var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 6px}
+.note ul{margin:0;padding-left:1.05em;display:grid;gap:5px}
+.note li::marker{color:var(--ink-3)}
+.note.fuel{background:var(--fuel-bg);padding:13px 16px 14px;border-radius:6px}
+.note.fuel h3{color:var(--fuel)}
+.note .opt{font-weight:600}
+.note .why,td .why{color:var(--ink-2)}
+.note .gone{color:var(--ink-3)}
+.note .gone b{color:var(--ink-2)}
+.out{font:600 .8125rem/1.2 var(--mono);white-space:nowrap;color:var(--south)}
+.stage:not(.s) .out{color:var(--north)}
+
+/* reference sections */
+.ref{display:grid;grid-template-columns:repeat(auto-fit,minmax(20rem,1fr));gap:24px 36px}
+.ref>div{min-width:0}
+.ref h3{font:600 1.375rem/1.1 var(--display);margin:0 0 8px}
+.ref ul{margin:0;padding-left:1.05em;display:grid;gap:6px}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9375rem;min-width:30rem}
+th,td{text-align:left;padding:8px 10px 7px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 .75rem/1.2 var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.co{font-family:var(--mono);font-weight:600;white-space:nowrap;color:var(--south)}
+tr.alt td{color:var(--ink-2);font-size:.875rem}
+tr.alt td.co{color:var(--ink-2)}
+tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--ink)}
+.check{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.check label{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--south)}
+.check input:checked+span{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--line-2)}
+.check b{font-weight:600}
+footer{margin-top:44px;padding-top:16px;border-top:3px solid var(--ink);font-size:.8125rem;color:var(--ink-2);display:grid;gap:6px}
+@media (max-width:480px){
+  .stage-head{grid-template-columns:1fr}
+  .date{display:flex;width:auto;justify-self:start;gap:8px;align-items:baseline;padding:6px 10px}
+  .date .dom{font-size:1.5rem;padding:0}
+  .plan li{grid-template-columns:3.9rem 1fr;gap:10px}
+}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style>
+<style>
+/* Non-stop additions: sleep and nap blocks, 24-hour clock grid, stop badges, Waze list */
+:root{--sleep:#4B3F9A}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sleep:#A99CF0}}
+:root[data-theme="dark"]{--sleep:#A99CF0}
+.day-track.h24::after{background-size:calc(100% / 8) 100%}
+.seg-sleep{background:var(--sleep)}
+.seg-nap{box-shadow:inset 0 0 0 2px var(--sleep);background:color-mix(in srgb,var(--sleep) 25%,transparent)}
+.tg{display:inline-block;font:600 .6875rem/1 var(--mono);padding:3px 5px 2px;border:1px solid var(--line-2);border-radius:3px;color:var(--ink-2);white-space:nowrap;vertical-align:1px}
+.tg.lpg{color:var(--fuel);border-color:var(--fuel);background:var(--fuel-bg)}
+</style>
+<style id="nav-css">
+/* Waze + Google Maps stop list */
+.wz-wrap{display:grid;gap:4px}
+.wz-day{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;justify-content:space-between;margin-top:14px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.wz-day h3{font:600 1.25rem/1.1 var(--display);margin:0}
+.wz-all{font:600 .8125rem/1.2 var(--body);white-space:nowrap}
+.wz{list-style:none;margin:0;padding:0;display:grid}
+.wz li{display:grid;grid-template-columns:2rem 1fr;column-gap:12px;row-gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.wz-n{font:600 .875rem/1 var(--mono);color:var(--ink-2);text-align:center;align-self:start;padding-top:4px}
+.wz-txt{min-width:0;display:grid;gap:1px}
+.wz-txt b{font-weight:600}
+.wz-txt small{color:var(--ink-2);font-size:.8125rem}
+.wz-txt .wz-t{font:400 .75rem/1.4 var(--mono);color:var(--ink-3)}
+.wz-btns{grid-column:2;display:flex;flex-wrap:wrap;gap:8px}
+.wz-go,.gm-go{display:inline-grid;place-items:center;min-height:44px;padding:0 16px;border-radius:22px;font:700 .9375rem/1 var(--body);text-decoration:none;white-space:nowrap}
+.wz-go{background:var(--north);color:#fff;min-width:5.4rem}
+.gm-go{border:2px solid var(--north);color:var(--north);background:transparent}
+.wz-go:hover,.gm-go:hover{text-decoration:none;filter:brightness(1.08)}
+.wz li.wz-sleep .wz-n,.wz li.wz-sleep .wz-txt b{color:var(--sleep,var(--north))}
+.wz li.done{opacity:.45}
+.wz li.done .wz-go{background:var(--ink-3)}
+.wz li.done .gm-go{border-color:var(--ink-3);color:var(--ink-3)}
+@media (min-width:40rem){.wz li{grid-template-columns:2rem 1fr auto}.wz-btns{grid-column:3;flex-wrap:nowrap}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .wz-go{color:#0D1318}}
+:root[data-theme="dark"] .wz-go{color:#0D1318}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<header class="masthead">
+  <p class="kicker">Road book · 10–12 November 2026 · non-stop, one driver</p>
+  <h1>Siracusa<span class="to">→</span>Riga</h1>
+  <p class="dek">The extreme version, with no hotels. One driver spends about 39 hours at the wheel over 54 hours, in stints of about two hours. Every four hours there’s a 20-minute nap in the car, and each night you sleep three hours at a lit, 24-hour motorway stop. Leave Tuesday at 04:00 and you’re home on Thursday at about 10:45 Riga time.</p>
+  <p class="facts"><span><b>≈3,300 km</b> door to door</span><span><b>≈54 h</b> on the road</span><span><b>≈39 h</b> at the wheel</span><span><b>0</b> hotels</span><span><b>2</b> nights in the car, 3 h each</span><span>3PMSF all-season tyres</span><span>petrol + LPG</span></p>
+  <p class="status"><span><b>Stops were taken from OpenStreetMap on 8 November 2026.</b> Every stop is on your side of the motorway. LPG and 24-hour pumps are marked where the map lists them. In Italy the bar and toilets at a service area can close at night, but the pumps stay open.</span><span><b>This is at the edge of what one driver can do safely.</b> It only works if you keep to the rules below. The calmer alternatives are the <a href="fast.html">4-day fast plan</a> and the <a href="./">6-day plan via Bari and Assisi</a>.</span></p>
+</header>
+
+<section class="block" aria-labelledby="h-rules">
+  <h2 class="sec-h" id="h-rules">The rules that make it work</h2>
+  <p class="sec-sub">At 56, driving alone, the risk isn’t the distance. It’s a few seconds of microsleep at 130 km/h. Each rule is there to prevent that.</p>
+  <div class="ref">
+    <div>
+      <h3>1 · Two hours, then stop</h3>
+      <ul>
+        <li>About <b>2 hours at the wheel</b>, never more than 2 h 20. That stretch happens twice, where the next good stop is further on.</li>
+        <li>At a <b>15-minute stop</b>, get out of the car, walk, use the toilet and drink water.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>2 · A 20-minute nap every four hours</h3>
+      <ul>
+        <li>Drink a coffee first, then recline the seat and set an alarm for 20 minutes. The caffeine takes effect just as you wake up.</li>
+        <li>Don’t sleep longer than 25 minutes, or you wake up groggy. Take the nap even if you feel fine, especially the 14:00 one on Tuesday.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>3 · Sleep through the body’s low point</h3>
+      <ul>
+        <li>Each night, sleep <b>3 hours: two 90-minute sleep cycles</b>. Waking at the end of a cycle is easier than waking in the middle of one.</li>
+        <li>After the alarm, spend 15 minutes outside: cold water on your face, light, and coffee. Then drive.</li>
+        <li><b>No coffee after 22:00.</b> At the night stop you need to fall asleep straight away.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>4 · Stop at once if…</h3>
+      <ul>
+        <li>…you yawn again and again, your eyelids are heavy or your head nods, you drift onto the rumble strip, miss an exit, or can’t remember the last few kilometres.</li>
+        <li>Then take the next parking area and a 20-minute nap. If two naps don’t fix it, <b>sleep a full 90 minutes</b>, which costs 1½ hours of arrival time. Open windows and loud music don’t help.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-waze">
+  <h2 class="sec-h" id="h-waze">Waze and Google Maps, stop by stop</h2>
+  <p class="sec-sub">Neither app can import a whole route, so set each stop as the destination in turn: once you’re parked, tap <b>Waze</b> or <b>Google Maps</b> for the next stop. Each point is the fuel station or service area on <b>your side</b> of the motorway, so the app takes you into it rather than to the other carriageway. Tapped stops turn grey, so you can see where you are. Times are the planned arrivals; if you’re late, just go on to the next stop.</p>
+  <div class="wz-wrap" id="waze">
+  <div class="wz-day"><h3>Tue 10 · Siracusa → Gonars, sleep 1</h3></div>
+  <ol class="wz">
+    <li class="ferry" data-i="1"><span class="wz-n">1</span><div class="wz-txt"><b>Messina ferry, Caronte &amp; Tourist</b><small>Rada San Francesco, where cars board. Leave the <span class="rd">A18</span> at Messina Boccetta, go straight to the waterfront and follow the Caronte &amp; Tourist signs. Tremestieri is only for vehicles over 3.5 t.</small><small class="wz-t">Tue 04:00 → 06:06 · 158 km · km 158</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=38.205945,15.560853&amp;navigate=yes" aria-label="Open Messina ferry, Caronte and Tourist in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=38.205945,15.560853&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=38.205945,15.560853&amp;directionsmode=driving" aria-label="Open Messina ferry, Caronte and Tourist in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="2"><span class="wz-n">2</span><div class="wz-txt"><b>Area di servizio Cosenza est</b><small><span class="rd">A2</span>, stop</small><small class="wz-t">07:18 → 09:29 · 188 km · km 346</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=39.345299,16.235575&amp;navigate=yes" aria-label="Open Area di servizio Cosenza est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=39.345299,16.235575&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=39.345299,16.235575&amp;directionsmode=driving" aria-label="Open Area di servizio Cosenza est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="3"><span class="wz-n">3</span><div class="wz-txt"><b>Area di servizio Sala Consilina est</b><small><span class="rd">A2</span>, Eni, nap + LPG</small><small class="wz-t">→ 11:38 · 160 km · km 506</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=40.398794,15.581273&amp;navigate=yes" aria-label="Open Area di servizio Sala Consilina est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=40.398794,15.581273&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=40.398794,15.581273&amp;directionsmode=driving" aria-label="Open Area di servizio Sala Consilina est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="4"><span class="wz-n">4</span><div class="wz-txt"><b>Teano Est</b><small><span class="rd">A1</span>, IP, nap</small><small class="wz-t">→ 14:19 · 181 km · km 687</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=41.234911,14.093463&amp;navigate=yes" aria-label="Open Teano Est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=41.234911,14.093463&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=41.234911,14.093463&amp;directionsmode=driving" aria-label="Open Teano Est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="5"><span class="wz-n">5</span><div class="wz-txt"><b>Area di servizio Mascherone Est</b><small><span class="rd">A1</span>, IP, stop + LPG</small><small class="wz-t">→ 16:47 · 174 km · km 861</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=42.124422,12.617919&amp;navigate=yes" aria-label="Open Area di servizio Mascherone Est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=42.124422,12.617919&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=42.124422,12.617919&amp;directionsmode=driving" aria-label="Open Area di servizio Mascherone Est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="6"><span class="wz-n">6</span><div class="wz-txt"><b>Arno Est</b><small><span class="rd">A1</span>, Eni, nap + dinner</small><small class="wz-t">→ 19:18 · 205 km · km 1,066</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=43.583338,11.521684&amp;navigate=yes" aria-label="Open Arno Est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=43.583338,11.521684&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=43.583338,11.521684&amp;directionsmode=driving" aria-label="Open Arno Est in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="7"><span class="wz-n">7</span><div class="wz-txt"><b>Area di servizio Po Est</b><small><span class="rd">A13</span>, Erg, stop + LPG</small><small class="wz-t">→ 22:02 · 186 km · km 1,252</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=44.880100,11.570768&amp;navigate=yes" aria-label="Open Area di servizio Po Est in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=44.880100,11.570768&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=44.880100,11.570768&amp;directionsmode=driving" aria-label="Open Area di servizio Po Est in Google Maps">Google Maps</a></div></li>
+    <li class="wz-sleep" data-i="8"><span class="wz-n">8</span><div class="wz-txt"><b>Gonars Sud</b><small><span class="rd">A4</span>, Eni, LPG, then <b>sleep</b></small><small class="wz-t">→ Wed 00:30 · 196 km · km 1,448</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=45.881748,13.259468&amp;navigate=yes" aria-label="Open Gonars Sud in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=45.881748,13.259468&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=45.881748,13.259468&amp;directionsmode=driving" aria-label="Open Gonars Sud in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Wed 11 · Gonars → Garliava, sleep 2</h3></div>
+  <ol class="wz">
+    <li class="" data-i="9"><span class="wz-n">9</span><div class="wz-txt"><b>Raststation Wörthersee</b><small><span class="rd">A2</span>, Eni, stop</small><small class="wz-t">03:55 → 05:44 · 163 km · km 1,611</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=46.630345,14.094663&amp;navigate=yes" aria-label="Open Raststation Wörthersee in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=46.630345,14.094663&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=46.630345,14.094663&amp;directionsmode=driving" aria-label="Open Raststation Wörthersee in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="10"><span class="wz-n">10</span><div class="wz-txt"><b>Raststation Arnwiesen</b><small><span class="rd">A2</span> past Graz, BP, nap + breakfast</small><small class="wz-t">→ 08:19 · 176 km · km 1,787</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=47.105239,15.767988&amp;navigate=yes" aria-label="Open Raststation Arnwiesen in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=47.105239,15.767988&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=47.105239,15.767988&amp;directionsmode=driving" aria-label="Open Raststation Arnwiesen in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="11"><span class="wz-n">11</span><div class="wz-txt"><b>Raststation Deutsch-Wagram</b><small>north edge of Vienna, OMV, stop</small><small class="wz-t">→ 11:07 · 179 km · km 1,966</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=48.310980,16.514991&amp;navigate=yes" aria-label="Open Raststation Deutsch-Wagram in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=48.310980,16.514991&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=48.310980,16.514991&amp;directionsmode=driving" aria-label="Open Raststation Deutsch-Wagram in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="12"><span class="wz-n">12</span><div class="wz-txt"><b>Maroli, Mikulov</b><small>Czechia, LPG</small><small class="wz-t">→ 12:10 · 65 km · km 2,031</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=48.806774,16.627375&amp;navigate=yes" aria-label="Open Maroli, Mikulov in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=48.806774,16.627375&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=48.806774,16.627375&amp;directionsmode=driving" aria-label="Open Maroli, Mikulov in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="13"><span class="wz-n">13</span><div class="wz-txt"><b>Osek, MOL</b><small><span class="rd">D1</span>, nap + lunch + LPG</small><small class="wz-t">→ 14:00 · 139 km · km 2,170</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=49.509990,17.499298&amp;navigate=yes" aria-label="Open Osek, MOL in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=49.509990,17.499298&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=49.509990,17.499298&amp;directionsmode=driving" aria-label="Open Osek, MOL in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="14"><span class="wz-n">14</span><div class="wz-txt"><b>MOP Dobieszowice Wschód</b><small><span class="rd">A1</span>, stop</small><small class="wz-t">→ 16:30 · 172 km · km 2,342</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=50.404693,19.017028&amp;navigate=yes" aria-label="Open MOP Dobieszowice Wschód in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=50.404693,19.017028&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=50.404693,19.017028&amp;directionsmode=driving" aria-label="Open MOP Dobieszowice Wschód in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="15"><span class="wz-n">15</span><div class="wz-txt"><b>MOP Niesułków, Shell</b><small><span class="rd">A1</span>, nap + dinner + LPG</small><small class="wz-t">→ 18:45 · 193 km · km 2,535</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=51.897691,19.705091&amp;navigate=yes" aria-label="Open MOP Niesułków, Shell in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=51.897691,19.705091&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=51.897691,19.705091&amp;directionsmode=driving" aria-label="Open MOP Niesułków, Shell in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="16"><span class="wz-n">16</span><div class="wz-txt"><b>MOP Budykierz, MOL</b><small><span class="rd">S8</span>, stop</small><small class="wz-t">→ 21:13 · 167 km · km 2,702</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=52.675915,21.616222&amp;navigate=yes" aria-label="Open MOP Budykierz, MOL in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=52.675915,21.616222&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=52.675915,21.616222&amp;directionsmode=driving" aria-label="Open MOP Budykierz, MOL in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="17"><span class="wz-n">17</span><div class="wz-txt"><b>MOP Rudniki Południe, Orlen</b><small><span class="rd">S61</span>, nap + LPG</small><small class="wz-t">→ 23:43 · 195 km · km 2,897</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=53.997849,22.826445&amp;navigate=yes" aria-label="Open MOP Rudniki Południe, Orlen in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=53.997849,22.826445&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=53.997849,22.826445&amp;directionsmode=driving" aria-label="Open MOP Rudniki Południe, Orlen in Google Maps">Google Maps</a></div></li>
+    <li class="wz-sleep" data-i="18"><span class="wz-n">18</span><div class="wz-txt"><b>Circle K Garliava</b><small><span class="rd">A5</span>, Lithuania, LPG, then <b>sleep</b></small><small class="wz-t">→ Thu 02:43 LT · 126 km · km 3,023</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=54.818877,23.858137&amp;navigate=yes" aria-label="Open Circle K Garliava in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=54.818877,23.858137&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=54.818877,23.858137&amp;directionsmode=driving" aria-label="Open Circle K Garliava in Google Maps">Google Maps</a></div></li>
+  </ol>
+  <div class="wz-day"><h3>Thu 12 · Garliava → Riga</h3></div>
+  <ol class="wz">
+    <li class="" data-i="19"><span class="wz-n">19</span><div class="wz-txt"><b>Circle K Panevėžys bypass</b><small>stop + LPG</small><small class="wz-t">06:08 → 08:11 · 133 km · km 3,156</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=55.810473,24.368814&amp;navigate=yes" aria-label="Open Circle K Panevėžys bypass in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=55.810473,24.368814&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=55.810473,24.368814&amp;directionsmode=driving" aria-label="Open Circle K Panevėžys bypass in Google Maps">Google Maps</a></div></li>
+    <li class="" data-i="20"><span class="wz-n">20</span><div class="wz-txt"><b>Riga</b><small>or use <i>Home</i> in the app</small><small class="wz-t">→ 10:46 · 142 km · km 3,298</small></div><div class="wz-btns"><a class="wz-go" href="https://waze.com/ul?ll=56.949600,24.105200&amp;navigate=yes" aria-label="Open Riga in Waze">Waze</a><a class="gm-go" href="https://www.google.com/maps/dir/?api=1&amp;destination=56.949600,24.105200&amp;travelmode=driving&amp;dir_action=navigate" data-ios="comgooglemaps://?daddr=56.949600,24.105200&amp;directionsmode=driving" aria-label="Open Riga in Google Maps">Google Maps</a></div></li>
+  </ol>
+  </div>
+  <div class="ref">
+    <div>
+      <h3>Set up Waze once</h3>
+      <ul>
+        <li><b>Settings → Navigation:</b> allow toll roads and ferries, and don’t avoid highways.</li>
+        <li><b>Settings → Navigation → Toll passes / Vignettes:</b> add the <b>Austria</b> and <b>Czech Republic</b> vignettes, or Waze may send you off the motorway there.</li>
+        <li><b>Settings → Gas stations:</b> set the preferred fuel to <b>LPG</b>.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Set up Google Maps once</h3>
+      <ul>
+        <li>On the route screen, tap <b>⋯ → Route options</b> and make sure tolls, highways and ferries <b>aren’t avoided</b>.</li>
+        <li>Download offline maps for Italy, Austria, Czechia, Poland and the Baltics, in case you lose signal.</li>
+        <li>Send this file to your phone by AirDrop, email or Telegram and open it there. The buttons open the apps.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-route">
+  <h2 class="sec-h" id="h-route">The route, to scale</h2>
+  <p class="sec-sub">The same roads as the fast plan: the toll-free <span class="rd">A2</span> through Calabria and the <span class="rd">A1</span> up Italy, then the <span class="rd">A2</span> over the Pack and past Graz, the <span class="rd">D1</span> through Czechia, the <span class="rd">A1</span>, <span class="rd">S8</span> and <span class="rd">S61</span> across Poland, and the Via Baltica home. It’s motorway or expressway all the way to Kaunas.</p>
+  <div class="strip-wrap" role="img" aria-label="Route bar by country: Sicily 158 km, ferry, mainland Italy 1,406 km, Austria 451 km, Czechia 231 km, Poland 696 km, Lithuania 257 km, Latvia 89 km. Sleeps in the car at km 1,448 Gonars and 3,023 Garliava; Riga at km 3,298.">
+    <div class="strip">
+      <i class="sic" style="--km:158"></i><i class="it" style="--km:1406">I</i><i class="a" style="--km:451">A</i><i class="t" style="--km:231">CZ</i><i class="t" style="--km:696">PL</i><i class="t" style="--km:257">LT</i><i class="t" style="--km:89">LV</i>
+    </div>
+    <div class="marks" aria-hidden="true">
+      <b data-n="1" style="left:43.91%"></b><b data-n="2" style="left:91.66%"></b>
+    </div>
+  </div>
+  <div class="legend">
+    <span><i class="cc">I</i>Sicily 158 + ferry + 1,406 km</span><span><i class="cc">A</i>451</span><span><i class="cc">CZ</i>231</span><span><i class="cc">PL</i>696</span><span><i class="cc">LT</i>257</span><span><i class="cc">LV</i>89</span>
+  </div>
+  <ol class="nights">
+    <li><span class="n">1</span>Gonars Sud, in the car<span class="km">km 1,448</span></li>
+    <li><span class="n">2</span>Circle K Garliava, in the car<span class="km">3,023</span></li>
+    <li><span class="n">·</span>Riga, home<span class="km">3,298</span></li>
+  </ol>
+</section>
+
+<section class="block" aria-labelledby="h-clock">
+  <h2 class="sec-h" id="h-clock">The clock</h2>
+  <p class="sec-sub">The whole trip on a 24-hour clock in Central European time; Lithuania and Latvia are one hour ahead. Dark blocks are driving. Outlined blocks are nap stops (20 minutes of sleep each), solid violet blocks are the night sleeps, and gaps are short stops. About half the driving is in the dark, and that’s fine on these roads.</p>
+  <div class="daylight">
+    <div class="axis" aria-hidden="true"><span></span><div class="axis-in"><span style="left:0">00</span><span style="left:12.5%">03</span><span style="left:25%">06</span><span style="left:37.5%">09</span><span style="left:50%">12</span><span style="left:62.5%">15</span><span style="left:75%">18</span><span style="left:87.5%">21</span><span style="left:100%">24</span></div><span></span></div>
+<div class="day-row"><span class="day-lbl">Tue 10</span><div class="day-track h24" style="background:linear-gradient(90deg,var(--night) 25.35%,var(--twilight) 25.35% 27.29%,var(--sun) 27.29% 70.42%,var(--twilight) 70.42% 72.43%,var(--night) 72.43%)"><span class="seg-drive" style="left:16.67%;width:8.78%" title="Driving 04:00–06:06"></span><span class="seg-ferry" style="left:25.44%;width:5.00%" title="Ferry Messina → Villa San Giovanni 06:06–07:18"></span><span class="seg-drive" style="left:30.44%;width:9.09%" title="Driving 07:18–09:29"></span><span class="seg-drive" style="left:40.57%;width:7.93%" title="Driving 09:44–11:38"></span><span class="seg-nap" style="left:48.50%;width:2.78%" title="Nap stop at Area di servizio Sala Consilina est (A2) 11:38–12:18"></span><span class="seg-drive" style="left:51.28%;width:8.36%" title="Driving 12:18–14:19"></span><span class="seg-nap" style="left:59.63%;width:2.43%" title="Nap stop at Teano Est (A1) 14:19–14:54"></span><span class="seg-drive" style="left:62.06%;width:7.88%" title="Driving 14:54–16:47"></span><span class="seg-drive" style="left:71.34%;width:9.08%" title="Driving 17:07–19:18"></span><span class="seg-nap" style="left:80.41%;width:2.78%" title="Nap stop at Arno Est (A1) 19:18–19:58"></span><span class="seg-drive" style="left:83.19%;width:8.64%" title="Driving 19:58–22:02"></span><span class="seg-drive" style="left:93.22%;width:6.78%" title="Driving 22:22–00:30"></span></div><span class="day-sun">↑06:33 ↓16:54</span></div>
+<div class="day-row"><span class="day-lbl">Wed 11</span><div class="day-track h24" style="background:linear-gradient(90deg,var(--night) 26.67%,var(--twilight) 26.67% 28.96%,var(--sun) 28.96% 66.94%,var(--twilight) 66.94% 69.44%,var(--night) 69.44%)"><span class="seg-drive" style="left:0.00%;width:2.08%" title="Driving 22:22–00:30"></span><span class="seg-sleep" style="left:2.08%;width:14.24%" title="Sleep in the car at Gonars Sud (A4) 00:30–03:55"></span><span class="seg-drive" style="left:16.32%;width:7.57%" title="Driving 03:55–05:44"></span><span class="seg-drive" style="left:24.94%;width:9.70%" title="Driving 05:59–08:19"></span><span class="seg-nap" style="left:34.64%;width:2.78%" title="Nap stop at Raststation Arnwiesen (A2) 08:19–08:59"></span><span class="seg-drive" style="left:37.42%;width:8.92%" title="Driving 08:59–11:07"></span><span class="seg-drive" style="left:47.38%;width:3.34%" title="Driving 11:22–12:10"></span><span class="seg-drive" style="left:51.41%;width:6.93%" title="Driving 12:20–14:00"></span><span class="seg-nap" style="left:58.33%;width:2.78%" title="Nap stop at Osek (D1), MOL 14:00–14:40"></span><span class="seg-drive" style="left:61.11%;width:7.66%" title="Driving 14:40–16:30"></span><span class="seg-drive" style="left:69.82%;width:8.28%" title="Driving 16:45–18:45"></span><span class="seg-nap" style="left:78.09%;width:2.78%" title="Nap stop at MOP Niesułków (A1), Shell 18:45–19:25"></span><span class="seg-drive" style="left:80.87%;width:7.51%" title="Driving 19:25–21:13"></span><span class="seg-drive" style="left:89.43%;width:9.39%" title="Driving 21:28–23:43"></span><span class="seg-nap" style="left:98.82%;width:1.18%" title="Nap stop at MOP Rudniki Południe (S61), Orlen 23:43–00:18"></span></div><span class="day-sun">↑06:57 ↓16:04</span></div>
+<div class="day-row"><span class="day-lbl">Thu 12</span><div class="day-track h24" style="background:linear-gradient(90deg,var(--night) 25.63%,var(--twilight) 25.63% 28.40%,var(--sun) 28.40% 63.75%,var(--twilight) 63.75% 66.67%,var(--night) 66.67%)"><span class="seg-nap" style="left:0.00%;width:1.25%" title="Nap stop at MOP Rudniki Południe (S61), Orlen 23:43–00:18"></span><span class="seg-drive" style="left:1.25%;width:5.92%" title="Driving 00:18–01:43"></span><span class="seg-sleep" style="left:7.17%;width:14.24%" title="Sleep in the car at Circle K Garliava (A5) 01:43–05:08"></span><span class="seg-drive" style="left:21.41%;width:8.56%" title="Driving 05:08–07:11"></span><span class="seg-drive" style="left:31.00%;width:9.69%" title="Driving 07:26–09:46"></span></div><span class="day-sun">↑06:49 ↓15:18</span></div>
+  </div>
+  <div class="chart-legend">
+    <span><i class="sw" style="background:var(--asphalt)"></i>Driving</span>
+    <span><i class="sw" style="background:var(--ferry)"></i>Ferry</span>
+    <span><i class="sw" style="box-shadow:inset 0 0 0 2px var(--sleep);background:color-mix(in srgb,var(--sleep) 25%,transparent)"></i>Nap stop</span>
+    <span><i class="sw" style="background:var(--sleep)"></i>Sleep in the car</span>
+    <span><i class="sw" style="background:var(--sun);box-shadow:inset 0 0 0 1px var(--line-2)"></i>Sun up</span>
+    <span><i class="sw" style="background:var(--twilight);box-shadow:inset 0 0 0 1px var(--line-2)"></i>Twilight</span>
+  </div>
+  <ul class="dark-sum" aria-label="Hours at the wheel per stage">
+    <li><span class="d">Tue</span>Siracusa → Gonars<span class="v">16½ h driving + ferry</span></li>
+    <li><span class="d">Wed</span>Gonars → Garliava<span class="v">18 h driving</span></li>
+    <li><span class="d">Thu</span>Garliava → Riga<span class="v">4½ h driving</span></li>
+    <li><span class="d">Sleep</span>2 × 3 h + 7 naps<span class="v">≈8½ h in 54 h</span></li>
+  </ul>
+</section>
+
+<section class="block" aria-labelledby="h-compare">
+  <h2 class="sec-h" id="h-compare">Against the other two plans</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Plan</th><th>Home in Riga</th><th>Nights</th><th class="num">Total, excl. meals</th></tr></thead>
+      <tbody>
+        <tr><td><b>Non-stop</b> (this one)</td><td><b>Thu 12 · ≈10:45</b></td><td>2 short sleeps in the car</td><td class="num">≈€400–470</td></tr>
+        <tr><td><a href="fast.html">Fast, 4 days</a></td><td>Fri 13 · ≈18:00</td><td>3 hotels, €221</td><td class="num">≈€620–690</td></tr>
+        <tr><td><a href="./">Via Bari and Assisi, 6 days</a></td><td>Sun 15 · ≈16:15</td><td>5 hotels, €450</td><td class="num">≈€875–930</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fine">Non-stop gets you home about 31 hours sooner than the fast plan and saves about €220 in hotels. The price is two very long days on about 8½ hours of sleep.</p>
+</section>
+
+<section class="block" aria-labelledby="h-stages" style="gap:0">
+<h2 class="sec-h" id="h-stages" style="margin-bottom:4px">Stop by stop</h2>
+<p class="fine" style="margin-top:6px">Times assume OpenStreetMap routing plus 10%, with the stops as listed. If you’re late, keep the rhythm, not the clock: stop every two hours wherever you are, and do the night sleep at the next big service area after midnight. <span class="tg lpg">LPG</span> means a pump on your side, according to OpenStreetMap. <span class="tg">24/7</span> means the pumps run around the clock.</p>
+<div class="stages">
+
+<!-- STAGE 1 -->
+<article class="stage s" id="stage-1">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Tue</span><span class="dom">10</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 1 <i class="cc">I</i> · the long Italian day</p>
+      <h2>Siracusa → Messina → Rome → Bologna → Gonars</h2>
+      <p class="meta"><span><b>1,448 km</b> + ferry</span><span>≈16½ h at the wheel</span><span>sunrise 06:33</span><span>sunset 16:54</span></p>
+    </div>
+  </header>
+  <p class="lede">The whole length of Italy in one go. You cross the Strait at first light, take the toll-free <span class="rd">A2</span> through Calabria in daylight, and pass Naples and Rome in the afternoon. In the dark you continue up the <span class="rd">A1</span> past Florence and over the Apennines to Bologna, then on the <span class="rd">A13</span> and <span class="rd">A4</span> to Friuli. You sleep at Gonars Sud, an hour short of the Austrian border.</p>
+  <ol class="plan">
+    <li><time>04:00</time><div>Leave Siracusa with both tanks full. <span class="rd">A18</span> to Messina.<small>Be in bed by 20:00 on Monday and get up at 03:30.</small></div></li>
+    <li class="key"><time>06:06</time><div><b>Messina.</b> Cars board at <b>Rada San Francesco</b>: leave the <span class="rd">A18</span> at Messina Boccetta, go straight to the waterfront and follow the Caronte &amp; Tourist signs. Boats leave Messina at 05:20, 06:00, <b>06:40</b> and 07:20, so you’ll make the 06:40 and be off in Villa by about 07:10. Leave at 03:40 to catch the 06:00. A car costs ≈€46. Tell the crew it’s an LPG car and drive on using petrol. The crossing counts as your first break.</div></li>
+    <li><time>07:18</time><div>North on the <span class="rd">A2</span>, toll-free.</div></li>
+    <li><time>09:29</time><div><b>Stop:</b> Area di servizio Cosenza est, 15 min.</div></li>
+    <li class="key"><time>11:38</time><div><b>Nap + LPG:</b> Area di servizio Sala Consilina est <span class="tg lpg">LPG</span> Eni. Fill up, eat lunch, have a coffee, then sleep 20 min. 40 min in all.</div></li>
+    <li class="key"><time>14:19</time><div><b>Nap:</b> Teano Est (<span class="rd">A1</span>), past Caserta. This is the afternoon dip, so nap even if you feel fresh. 35 min.</div></li>
+    <li><time>16:47</time><div><b>Stop + LPG:</b> Area di servizio Mascherone Est, north of Rome <span class="tg lpg">LPG</span> IP. 20 min. Sunset is at 16:54, so from here on it’s dark.</div></li>
+    <li class="key"><time>19:18</time><div><b>Nap + dinner:</b> Arno Est, before Florence. 40 min.</div></li>
+    <li><time>22:02</time><div><b>Stop + LPG:</b> Area di servizio Po Est (<span class="rd">A13</span>) <span class="tg lpg">LPG</span> <span class="tg">24/7</span> Erg. 20 min. Drink decaf from here on.</div></li>
+    <li class="key"><time>00:30</time><div><b>Sleep: Area di servizio Gonars Sud</b> (<span class="rd">A4</span>), between Portogruaro and Palmanova. Fill up with LPG first <span class="tg lpg">LPG</span>: it’s the <b>last LPG before Austria</b>. Then park by the building, in the light. Lights out by 00:40, <b>alarm at 03:40</b>.<small>Wednesday’s date starts here.</small></div></li>
+  </ol>
+  <div class="notes">
+    <div class="note fuel">
+      <h3>Fuel and tolls</h3>
+      <ul>
+        <li>LPG on your side at Sala Consilina, Mascherone, Po Est and Gonars, about every 400 km.</li>
+        <li>Keep a quarter tank of petrol for the ferry.</li>
+        <li><b>Tolls:</b> the <span class="rd">A18</span>, then the <span class="rd">A30</span>, <span class="rd">A1</span>, <span class="rd">A13</span>, <span class="rd">A4</span> and <span class="rd">A23</span>, ≈€75–85 by card. The <span class="rd">A2</span> is free.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Night roadworks</h3>
+      <ul>
+        <li>Italian motorways often close sections overnight for roadworks, usually from about 22:00, with signed detours.</li>
+        <li>On Tuesday afternoon, check the closures for the <span class="rd">A13</span> on autostrade.it and for the <span class="rd">A4</span> east of Venice on autostradealtoadriatico.it.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li>Around Naples and Caserta, lock the car and take your valuables at every stop.</li>
+        <li>Speed limit 130, <b>110 in rain</b>. Average-speed cameras (Tutor) cover many stretches.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 2 -->
+<article class="stage" id="stage-2">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Wed</span><span class="dom">11</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 2 <i class="cc">I</i> <i class="cc">A</i> <i class="cc">CZ</i> <i class="cc">PL</i> <i class="cc">LT</i> · the hard day</p>
+      <h2>Gonars → Villach → Graz → Vienna → Brno → Warsaw → Garliava</h2>
+      <p class="meta"><span><b>1,575 km</b></span><span>≈18 h at the wheel</span><span>Pack at sunrise</span><span>sunset 16:04 Poland</span></p>
+    </div>
+  </header>
+  <p class="lede">The longest day, on three hours’ sleep. Cross the Alps at Tarvisio before dawn and reach the Pack at sunrise. Then come Graz and Vienna in the morning, Czechia at lunchtime and Poland by mid-afternoon. Warsaw is behind you by about 20:30, and you cross into Lithuania just before 02:00 local time. Keep the naps; today they matter most.</p>
+  <ol class="plan">
+    <li><time>03:40</time><div>Alarm. Spend 15 minutes outside, with cold water and a coffee. <b>Leave at 03:55.</b></div></li>
+    <li><time>05:19</time><div><b>Austria</b> at Arnoldstein. The <span class="rd">A2</span> east past Villach and Klagenfurt.<small>You need the digital vignette, bought before you get here.</small></div></li>
+    <li><time>05:44</time><div><b>Stop:</b> Raststation Wörthersee <span class="tg">24/7</span> Eni. 15 min.</div></li>
+    <li><time>07:05</time><div>Over the <b>Pack</b> (≈1,060 m), just after sunrise at 06:57. Watch for frost on the bridges.</div></li>
+    <li class="key"><time>08:19</time><div><b>Nap + breakfast:</b> Raststation Arnwiesen, past Graz <span class="tg">24/7</span> BP. 40 min.<small>If you need a stop on the Pack, Rastplatz Herzogberg Süd is at the top.</small></div></li>
+    <li><time>10:51</time><div>Through Vienna on the <span class="rd">A23</span>, then north towards Brno.</div></li>
+    <li><time>11:07</time><div><b>Stop:</b> Raststation Deutsch-Wagram, on the north edge of Vienna <span class="tg">24/7</span>. 15 min.</div></li>
+    <li><time>12:10</time><div><b>Czechia.</b> LPG at Maroli/Orlen, just past the border at Mikulov <span class="tg lpg">LPG</span> <span class="tg">24/7</span>. 10 min. You’ve been on petrol since about Graz.</div></li>
+    <li class="key"><time>14:00</time><div><b>Nap + lunch + LPG:</b> Osek services on the <span class="rd">D1</span>, past Brno <span class="tg lpg">LPG</span> MOL. 40 min.</div></li>
+    <li><time>15:36</time><div><b>Poland</b> at Bohumín–Gorzyczki. The <span class="rd">A1</span> north.</div></li>
+    <li><time>16:30</time><div><b>Stop:</b> MOP Dobieszowice Wschód (<span class="rd">A1</span>) <span class="tg">24/7</span>. 15 min. It gets dark around now.</div></li>
+    <li class="key"><time>18:45</time><div><b>Nap + dinner + LPG:</b> MOP Niesułków (<span class="rd">A1</span>), before Stryków <span class="tg lpg">LPG</span> Shell. 40 min.</div></li>
+    <li><time>20:24</time><div>Warsaw on the <span class="rd">S8</span>; traffic is light by now.</div></li>
+    <li><time>21:13</time><div><b>Stop:</b> MOP Budykierz (<span class="rd">S8</span>) <span class="tg">24/7</span> MOL. 15 min. Decaf from here on.</div></li>
+    <li class="key"><time>23:43</time><div><b>Nap + LPG:</b> MOP Rudniki Południe (<span class="rd">S61</span>), between Ełk and Suwałki <span class="tg lpg">LPG</span> <span class="tg">24/7</span> Orlen. 35 min. No coffee this time, because you sleep in three hours.</div></li>
+    <li><time>01:56</time><div><b>Lithuania</b> at Budzisko–Kalvarija. <b>Clocks go forward an hour.</b> From here on, times are Lithuanian time.</div></li>
+    <li class="key"><time>02:43</time><div><b>Sleep: Circle K Garliava</b>, Baltijos g. 1, on the <span class="rd">A5</span> just before Kaunas <span class="tg lpg">LPG</span> <span class="tg">24/7</span>. A big 24-hour station with coffee and a shop. Lights out by 02:55, <b>alarm at 05:55</b>.<small>To your body that’s 01:55–04:55, the same as last night.</small></div></li>
+  </ol>
+  <div class="notes">
+    <div class="note fuel">
+      <h3>Fuel and tolls</h3>
+      <ul>
+        <li><b>Austria has almost no LPG on this route.</b> The car switches to petrol somewhere past Graz, and the next LPG is right after the Czech border.</li>
+        <li><b>Austria:</b> digital vignette, the 10-day one for €12.80 from Tue 10 (or the 1-day for €9.60 for Wed 11 only). <b>Czechia:</b> 1-day e-vignette for Wed 11, CZK 230.</li>
+        <li>Poland (<span class="rd">A1</span>, <span class="rd">A2</span>, <span class="rd">S8</span>, <span class="rd">S61</span>) and Lithuania are free for cars.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Winter rules today</h3>
+      <ul>
+        <li><i class="cc">A</i> <i class="cc">CZ</i> Winter tyres are required in snow or ice from 1 November. Your 3PMSF tyres count if the tread is at least 4 mm.</li>
+        <li><i class="cc">LT</i> Winter tyres are <b>compulsory from 10 November</b>. All-season tyres with 3PMSF are accepted, with at least 3 mm of tread.</li>
+      </ul>
+    </div>
+    <div class="note">
+      <h3>Heads-up</h3>
+      <ul>
+        <li>Around Graz the <span class="rd">A2</span> has air-quality 100 km/h zones (signed “IG-L”).</li>
+        <li>Speed limits: Poland 140 on motorways, 120 on expressways; Lithuanian motorways 110 in winter.</li>
+        <li>Polish MOP rest areas without a fuel station have toilets only.</li>
+      </ul>
+    </div>
+  </div>
+</article>
+
+<!-- STAGE 3 -->
+<article class="stage" id="stage-3">
+  <header class="stage-head">
+    <div class="date" aria-hidden="true"><span class="dow">Thu</span><span class="dom">12</span><span class="mon">Nov</span></div>
+    <div>
+      <p class="eyebrow">Stage 3 <i class="cc">LT</i> <i class="cc">LV</i> · home</p>
+      <h2>Garliava → Kaunas → Panevėžys → Bauska → Riga</h2>
+      <p class="meta"><span><b>275 km</b></span><span>≈4½ h at the wheel</span><span>sunrise 07:49 LT time</span></p>
+    </div>
+  </header>
+  <p class="lede">The short last stage, in Lithuanian and Latvian time. You go round Kaunas and up the Via Baltica in the dawn, cross into Latvia past Bauska, and arrive in Riga after the morning rush.</p>
+  <ol class="plan">
+    <li><time>05:55</time><div>Alarm and the 15-minute wake-up. <b>Leave at 06:08.</b></div></li>
+    <li><time>08:11</time><div><b>Stop:</b> Circle K on the Panevėžys bypass <span class="tg lpg">LPG</span> <span class="tg">24/7</span>. 15 min. It’s light by now.<small>Circle K or Virši at Iecava, 35 minutes before Riga, is a spare stop if you need it.</small></div></li>
+    <li><time>09:20</time><div><b>Latvia</b> at Grenctāle. The <span class="rd">A7</span> past Bauska.</div></li>
+    <li class="key"><time>10:46</time><div><b>Riga, home.</b> Go to bed.</div></li>
+  </ol>
+</article>
+
+</div>
+</section>
+
+<section class="block" aria-labelledby="h-car">
+  <h2 class="sec-h" id="h-car">Sleeping in the car</h2>
+  <div class="ref">
+    <div>
+      <h3>Where</h3>
+      <ul>
+        <li>Park in the light, near the building and its cameras, among cars and facing out.</li>
+        <li>Not in the truck rows: refrigerated trailers run all night and trucks leave at 04:00.</li>
+        <li>Resting in your car at motorway services is normal everywhere on this route. Just don’t set up camp.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Warm, with the engine off</h3>
+      <ul>
+        <li>Italy fines idling while parked (≈€220–440), and an idling engine is also a carbon-monoxide risk.</li>
+        <li>Expect about 0–5 °C at night in Friuli and Lithuania. Bring a sleeping bag, a wool hat and socks. Open a window 1 cm against condensation.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Comfortable</h3>
+      <ul>
+        <li>Recline the passenger seat fully; it has more room than the driver’s seat, with no steering wheel in the way.</li>
+        <li>Bring an eye mask, earplugs and a neck pillow, and set two alarms.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Safe</h3>
+      <ul>
+        <li>Lock the doors, keep the keys in your pocket and the valuables out of sight, and keep your phone charging.</li>
+        <li>Share your live location with someone at home for the whole trip.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-food">
+  <h2 class="sec-h" id="h-food">Eating on the road, no red meat</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Where</th><th>Take</th><th>Avoid</th></tr></thead>
+      <tbody>
+        <tr><td><i class="cc">I</i> Autogrill</td><td>Panini and piadine with chicken (<em>pollo</em>) or tuna (<em>tonno</em>), salads, yoghurt</td><td>Ham, salami, mortadella</td></tr>
+        <tr><td><i class="cc">A</i> Raststation</td><td>Backhendl (fried chicken), fish, Kaiserschmarrn</td><td>Soups made with beef broth</td></tr>
+        <tr><td><i class="cc">CZ</i> <i class="cc">PL</i> <i class="cc">LT</i> fuel stations</td><td>Chicken wraps and sandwiches, cheese zapiekanka</td><td><b>Hot dogs are pork</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fine">Eat light: small meals keep you awake, and a big plate of pasta at 20:00 puts you to sleep. Pack a cool bag in Siracusa with sandwiches, fruit, nuts and water for the night stretches, when the bars are shut.</p>
+</section>
+
+<section class="block" aria-labelledby="h-costs">
+  <h2 class="sec-h" id="h-costs">Trip costs</h2>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Where</th><th class="num">Approx.</th></tr></thead>
+      <tbody>
+        <tr><td>Hotels</td><td>None</td><td class="num">€0</td></tr>
+        <tr><td>Strait of Messina ferry</td><td>Caronte &amp; Tourist</td><td class="num">€46–55</td></tr>
+        <tr><td>Autostrada tolls</td><td><span class="rd">A18</span>, <span class="rd">A30</span>, <span class="rd">A1</span>, <span class="rd">A13</span>, <span class="rd">A4</span>, <span class="rd">A23</span>; the <span class="rd">A2</span> is free. Estimate.</td><td class="num">≈€75–85</td></tr>
+        <tr><td>Digital vignette</td><td>Austria · 10-day from Tue 10 (1-day for Wed 11: €9.60)</td><td class="num">€12.80</td></tr>
+        <tr><td>e-vignette, 1 day</td><td>Czechia · Wed 11</td><td class="num">CZK 230 ≈ €9</td></tr>
+        <tr><td>Motorways</td><td>Poland, Lithuania, Latvia</td><td class="num">€0</td></tr>
+        <tr><td>Fuel</td><td>3,300 km at about 10 L of LPG per 100 km, plus petrol through Austria</td><td class="num">€255–310</td></tr>
+      </tbody>
+      <tfoot><tr><td colspan="2">Whole drive home, excluding meals</td><td class="num">≈€400–470</td></tr></tfoot>
+    </table>
+  </div>
+</section>
+
+<section class="block" aria-labelledby="h-planb">
+  <h2 class="sec-h" id="h-planb">If it isn’t working</h2>
+  <p class="sec-sub">Stopping for a real bed isn’t a failure. Two hotels from the fast plan are right on this route: <a href="https://www.booking.com/hotel/at/roomrent55.html">Motel55</a> at Villach-Warmbad, which has self check-in and is 1½ hours past Gonars, and <a href="https://www.booking.com/hotel/pl/ekotrans.html">HOTEL AVIA Ekotrans</a> at Piotrków, 3 minutes off the <span class="rd">A1</span>. Either can be booked from the car on the day. A full night’s sleep instead of a 3-hour one moves arrival from Thursday morning to Thursday afternoon or evening. That’s still a day ahead of the 4-day plan.</p>
+</section>
+
+<section class="block" aria-labelledby="h-before">
+  <h2 class="sec-h" id="h-before">Before you go</h2>
+  <p class="sec-sub">Ticks are saved in this browser only.</p>
+  <ul class="check" id="checklist">
+    <li><label for="ck-1"><input type="checkbox" id="ck-1"><span><b>Bank sleep on Monday.</b> Nap 60–90 minutes in the afternoon, be in bed by 20:00, and get up at 03:30.</span></label></li>
+    <li><label for="ck-2"><input type="checkbox" id="ck-2"><span>Pack the sleep kit: sleeping bag, pillow, eye mask, earplugs, wool hat, two alarms, power bank, wet wipes and a toothbrush.</span></label></li>
+    <li><label for="ck-3"><input type="checkbox" id="ck-3"><span>Pack the cool bag: sandwiches, fruit, nuts, yoghurt, 3 L of water and a thermos.</span></label></li>
+    <li><label for="ck-4"><input type="checkbox" id="ck-4"><span><b>Tyres:</b> check that the tread is at least 4 mm. The 3PMSF all-season tyres then count as winter tyres in Austria, Czechia and Lithuania.</span></label></li>
+    <li><label for="ck-5"><input type="checkbox" id="ck-5"><span>Buy the Austrian digital vignette at the <a href="https://shop.asfinag.at/en/">ASFINAG shop</a> (10-day from Tue 10) and the Czech 1-day for Wed 11 at <a href="https://edalnice.gov.cz/en/price-list">edalnice.gov.cz</a>.</span></label></li>
+    <li><label for="ck-6"><input type="checkbox" id="ck-6"><span>Monday evening: fill both tanks in Siracusa. The ferry was checked on 9 Nov: cars board at Rada San Francesco (A18 exit Messina Boccetta); Tremestieri is only for vehicles over 3.5 t.</span></label></li>
+    <li><label for="ck-7"><input type="checkbox" id="ck-7"><span>Tuesday afternoon: check the Italian night closures on the <span class="rd">A13</span> and the <span class="rd">A4</span>, and the forecast for Tarvisio and the Pack.</span></label></li>
+    <li><label for="ck-8"><input type="checkbox" id="ck-8"><span>Share your live location with someone at home and tell them the two sleep stops.</span></label></li>
+    <li><label for="ck-9"><input type="checkbox" id="ck-9"><span>Download offline maps for the whole route.</span></label></li>
+  </ul>
+</section>
+
+<footer>
+  <p>Distances and wheel times come from OpenStreetMap routing (OSRM) via Graz, plus 10%. The ferry is counted as 1 h 12 min including the queue. Stops, sides of the road, LPG pumps and 24-hour hours come from OpenStreetMap as of 8 November 2026; OpenStreetMap doesn’t list every LPG pump. Sunrise and sunset are calculated for where you’ll be at the time.</p>
+  <p>Calmer alternatives: <a href="fast.html">4 days via the A2 and A1</a> · <a href="./">6 days via Bari and Assisi</a>.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var KEY="siracusa-riga-nonstop-checklist-v1";
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){saved={};}
+  var boxes=document.querySelectorAll("#checklist input[type=checkbox]");
+  boxes.forEach(function(b){
+    if(saved[b.id]) b.checked=true;
+    b.addEventListener("change",function(){
+      saved[b.id]=b.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(saved));}catch(e){}
+    });
+  });
+})();
+</script>
+
+<script id="nav-js">
+(function(){
+  var iOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  if(iOS) document.querySelectorAll("a[data-ios]").forEach(function(a){a.href=a.getAttribute("data-ios");});
+  var KEY="siracusa-riga-nonstop-nav-v1",done={};
+  try{done=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){done={};}
+  document.querySelectorAll("#waze li").forEach(function(li){
+    var i=li.getAttribute("data-i");
+    if(done[i]) li.classList.add("done");
+    li.querySelectorAll(".wz-go,.gm-go").forEach(function(a){a.addEventListener("click",function(){
+      li.classList.add("done");done[i]=1;
+      try{localStorage.setItem(KEY,JSON.stringify(done));}catch(e){}
+    });});
+  });
+})();
+</script>
+</body></html>
