@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>iPhone Lux Meter Idea</title>
+<meta name="description" content="Feasibility exploration of an iOS app measuring lux, blue light and melanopic EDI on iPhone 17 Pro and later.">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --surface-2: #f3f1ec;
+    --text: #1d1c1a;
+    --muted: #64615b;
+    --border: #e3dfd6;
+    --accent: #0e7c86;
+    --accent-soft: #e2f2f3;
+    --warn: #a15c07;
+    --warn-soft: #fbf0df;
+    --ok: #2f7d32;
+    --ok-soft: #e5f2e5;
+    --bad: #b3261e;
+    --bad-soft: #f9e3e1;
+    --code-bg: #f3f1ec;
+    --c-red: #d1453b;
+    --c-green: #3c9a46;
+    --c-blue: #3b6fd8;
+    --c-mel: #0e9aa7;
+    --c-v: #8a857c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141414;
+      --surface: #1c1c1b;
+      --surface-2: #242423;
+      --text: #ecebe8;
+      --muted: #a29f98;
+      --border: #34332f;
+      --accent: #4cc3cd;
+      --accent-soft: #12302f;
+      --warn: #e8a548;
+      --warn-soft: #33270f;
+      --ok: #7cc47f;
+      --ok-soft: #17301a;
+      --bad: #f0857c;
+      --bad-soft: #3a1b18;
+      --code-bg: #242423;
+      --c-red: #f0716a;
+      --c-green: #6cc276;
+      --c-blue: #7aa2f7;
+      --c-mel: #4fd1dc;
+      --c-v: #8f8b83;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141414; --surface: #1c1c1b; --surface-2: #242423; --text: #ecebe8; --muted: #a29f98;
+    --border: #34332f; --accent: #4cc3cd; --accent-soft: #12302f; --warn: #e8a548; --warn-soft: #33270f;
+    --ok: #7cc47f; --ok-soft: #17301a; --bad: #f0857c; --bad-soft: #3a1b18; --code-bg: #242423;
+    --c-red: #f0716a; --c-green: #6cc276; --c-blue: #7aa2f7; --c-mel: #4fd1dc; --c-v: #8f8b83;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 48px 16px 72px; }
+
+  header .kicker {
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin: 0 0 8px;
+  }
+  h1 { font-size: clamp(28px, 6vw, 40px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.02em; }
+  header .meta { color: var(--muted); font-size: 14px; margin: 0; }
+
+  h2 {
+    font-size: 22px; line-height: 1.3; margin: 48px 0 14px; letter-spacing: -.01em;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  h2 .num { color: var(--accent); font-variant-numeric: tabular-nums; font-size: 16px; font-weight: 700; }
+  h3 { font-size: 17px; margin: 26px 0 8px; }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin: 4px 0; }
+  li > ul { margin-top: 4px; margin-bottom: 4px; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+  strong { font-weight: 650; }
+  code {
+    font: 0.88em/1.4 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 16px; overflow-x: auto; margin: 0 0 16px;
+  }
+  pre code { background: none; padding: 0; font-size: 13.5px; line-height: 1.55; overflow-wrap: normal; }
+
+  .summary {
+    background: var(--accent-soft); border-left: 4px solid var(--accent);
+    border-radius: 10px; padding: 18px 20px; margin: 32px 0 0;
+  }
+  .summary p:last-child { margin-bottom: 0; }
+
+  .table-wrap { overflow-x: auto; margin: 0 0 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--surface-2); font-weight: 600; font-size: 13px; letter-spacing: .02em; color: var(--muted); }
+  tr:last-child td { border-bottom: 0; }
+  td.nowrap { white-space: nowrap; }
+
+  .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; margin-right: 6px; white-space: nowrap; }
+  .pill.no { background: var(--bad-soft); color: var(--bad); }
+  .pill.yes { background: var(--ok-soft); color: var(--ok); }
+
+  .figure { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 8px 0 16px; }
+  .figure svg { display: block; width: 100%; height: auto; }
+  .figure .axis { stroke: var(--border); stroke-width: 1; }
+  .figure .tick { fill: var(--muted); font-size: 12px; font-family: inherit; }
+  .figure .annot { fill: var(--c-mel); font-size: 12px; font-weight: 700; font-family: inherit; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { display: inline-block; width: 18px; height: 0; border-top: 3px solid; }
+  .legend i.dash { border-top-style: dashed; }
+  .legend i.dot { border-top-style: dotted; }
+  .caption { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+
+  .zones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 6px 0 16px; }
+  .zone { border-radius: 12px; padding: 14px; border: 1px solid var(--border); background: var(--surface); }
+  .zone .label { font-size: 13px; color: var(--muted); }
+  .zone .val { font-size: 22px; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+  .zone.day { border-top: 4px solid var(--warn); }
+  .zone.eve { border-top: 4px solid var(--c-mel); }
+  .zone.sleep { border-top: 4px solid var(--c-blue); }
+  @media (max-width: 520px) { .zones { grid-template-columns: 1fr; } }
+
+  .steps { list-style: none; padding: 0; margin: 0 0 16px; counter-reset: s; }
+  .steps li { position: relative; padding: 12px 14px 12px 52px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin: 8px 0; }
+  .steps li::before {
+    counter-increment: s; content: counter(s);
+    position: absolute; left: 14px; top: 12px; width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: var(--bg); font-weight: 700; font-size: 14px;
+    display: grid; place-items: center;
+  }
+
+  .note { background: var(--warn-soft); border-radius: 10px; padding: 12px 16px; margin: 0 0 16px; font-size: 15px; }
+  .note strong { color: var(--warn); }
+
+  .sources { font-size: 14px; }
+  .sources li { margin: 6px 0; }
+  .arch { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; margin: 8px 0 20px; }
+  .arch-col { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .arch-title { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .arch-box { background: var(--surface-2); border-radius: 8px; padding: 8px 10px; font-size: 14px; font-weight: 600; line-height: 1.35; }
+  .arch-box small { display: block; font-weight: 400; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .arch-box.muted { font-weight: 400; color: var(--muted); margin-top: 8px; font-size: 13px; }
+  .arch-arrow { text-align: center; color: var(--muted); font-size: 12px; line-height: 1; padding: 5px 0; }
+  .arch-link { text-align: center; font-size: 12px; font-weight: 700; color: var(--accent); }
+  .arch-link span { display: block; font-size: 26px; line-height: 1; }
+  @media (max-width: 600px) {
+    .arch { grid-template-columns: 1fr; }
+    .arch-link span { transform: rotate(90deg); margin: 4px 0; }
+  }
+
+  td small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 18px; margin: 0 0 16px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  footer { margin-top: 48px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="kicker">App idea · feasibility exploration</p>
+  <h1>An iPhone app that measures lux, blue light and melanopic light</h1>
+  <p class="meta">Target: iPhone 17 Pro and later · 15 November 2026</p>
+</header>
+
+<div class="summary">
+  <p><strong>Short version:</strong> this is buildable, but the camera has to do the measuring. The iPhone 17 Pro has two ambient light sensors (front and rear), and Apple doesn't let third-party apps read either one in real time.</p>
+  <p>With calibration, the camera can measure lux well. Blue light and melanopic lux can only be <em>estimated</em> from the camera's three colour channels. Those estimates hold up for normal white light and are unreliable for coloured or narrow-band light, so the app has to say when it's guessing.</p>
+  <p>For personal use, a small Bluetooth spectral sensor (<a href="#ble-sensor">section 07</a>) gives much better melanopic readings and can log all day. Ready-made devices exist (<a href="#buy-vs-build">section 08</a>), but they cost far more and keep their data in their own apps, so building the sensor is the more practical route.</p>
+</div>
+
+<h2><span class="num">01</span>Where the readings can come from</h2>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Route</th><th>Verdict</th></tr></thead>
+  <tbody>
+    <tr><td>Ambient light sensors (front and rear)</td><td><span class="pill no">No</span>No public API. A developer asked Apple for real-time lux and colour (chromaticity) access in Feedback request FB25181710.</td></tr>
+    <tr><td>SensorKit <code>SRAmbientLightSample</code> (gives lux and chromaticity)</td><td><span class="pill no">No</span>Apple grants access only to approved research studies, and data arrives about 24 hours late.</td></tr>
+    <tr><td><code>UIScreen.brightness</code></td><td><span class="pill no">No</span>This is the auto-brightness setting, not a lux reading.</td></tr>
+    <tr><td><strong>Camera (AVFoundation)</strong></td><td><span class="pill yes">Yes</span>The only practical route, and the one other light-meter apps use.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2><span class="num">02</span>Measuring lux with the camera</h2>
+<p>Read raw sensor data and divide out the exposure settings. What's left is proportional to how bright the light is:</p>
+<pre><code>S_c = (raw_c − black_c) / (t · ISO/100)      per channel R, G, B
+E_v = k · (w_R·S_R + w_G·S_G + w_B·S_B)      k, w calibrated per iPhone model and camera</code></pre>
+<p>Here <code>t</code> is the shutter time, <code>black_c</code> is the sensor's black level and <code>E_v</code> is the lux reading. A rough version without raw data uses only the exposure settings: <code>E ≈ C·N²/(t·ISO)</code>, where N is the aperture f-number and C is a calibration constant. It's less accurate because Apple's auto-exposure and tone mapping get in the way.</p>
+
+<h3>Design decisions</h3>
+<ul>
+  <li><strong>Use raw sensor data (Bayer RAW), not normal photos or video.</strong> Normal frames go through HDR and tone mapping, so pixel values stop being proportional to light. Raw captures through <code>AVCapturePhotoOutput</code> are linear, and 2–5 readings per second is enough for a meter.
+    <ul>
+      <li>On Pro models, Apple Log video uses a published curve that can be reversed, so it may work for a continuous mode.</li>
+      <li>Raw support on the front camera is limited, so check <code>availableRawPhotoPixelFormatTypes</code> for each camera.</li>
+    </ul>
+  </li>
+  <li><strong>Set exposure manually and adjust it automatically</strong> (<code>setExposureModeCustom</code>). Keep the brightest channel at roughly 20–60% of full scale. That should cover about 0.1 lx up to direct sun (~100,000 lx).</li>
+  <li><strong>Account for the angle light arrives from.</strong> A lux reading should count light from the whole half-sphere above the sensor, weighted by angle. A lens only sees its field of view. Two fixes:
+    <ol>
+      <li><strong>A diffuser over the lens</strong> (a PTFE disc, a clip-on cap, even white paper). Most accurate, but it's an accessory.</li>
+      <li><strong>Correct for angle in software using the 120° ultra-wide.</strong> Use the lens calibration to work out each pixel's angle, weight the pixels accordingly and add them up. No accessory needed, but it misses light from beyond the frame edges: with even light from all directions, a frame reaching about 60° from centre captures about 75%. This would set the app apart.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3>Two measurement modes</h3>
+<ul>
+  <li><strong>Desk:</strong> phone flat, camera facing up. The standard lighting-design measurement.</li>
+  <li><strong>Eye level:</strong> phone held at eye height, rear camera pointing where you look. This is how the melanopic standard (CIE S 026) and the sleep and circadian recommendations define the measurement.</li>
+</ul>
+
+<h2><span class="num">03</span>Blue light and melanopic lux</h2>
+<ul>
+  <li><strong>Melanopic EDI</strong> (melanopic equivalent daylight illuminance, from CIE S 026:2018) is lux weighted for the eye's melanopsin cells, which drive the body clock. The formula is melanopic irradiance (mW/m²) ÷ 1.3262, or equivalently <code>lux × mDER</code>, where mDER is a ratio that depends on the light's spectrum.</li>
+  <li><strong>Why it can only be estimated:</strong> melanopsin is most sensitive around 490 nm, between the camera's blue and green channels. Three channels can't pin it down exactly. The app has to estimate it from what real light sources typically look like.</li>
+</ul>
+
+<div class="figure">
+  <svg viewBox="0 0 640 210" role="img" aria-label="Schematic of spectral sensitivities: camera blue peaks near 460 nm, melanopic near 490 nm, camera green near 535 nm, photopic (lux) near 555 nm, camera red near 600 nm.">
+    <line class="axis" x1="40" y1="170" x2="600" y2="170"/>
+    <g class="tick" text-anchor="middle">
+      <text x="72.9" y="190">400</text>
+      <text x="155.3" y="190">450</text>
+      <text x="237.6" y="190">500</text>
+      <text x="320.0" y="190">550</text>
+      <text x="402.4" y="190">600</text>
+      <text x="484.7" y="190">650</text>
+      <text x="567.1" y="190">700</text>
+      <text x="320" y="207" style="font-size:11px">wavelength (nm)</text>
+    </g>
+    <line x1="221.2" y1="22" x2="221.2" y2="170" stroke="var(--c-mel)" stroke-width="1" stroke-dasharray="2 3" opacity=".7"/>
+    <text class="annot" x="221.2" y="16" text-anchor="middle">melanopsin ~490 nm</text>
+    <g fill="none" stroke-linejoin="round" stroke-linecap="round">
+      <path stroke="var(--c-blue)" stroke-width="2" d="M40.0,169.5 L46.6,169.1 L53.2,168.4 L59.8,167.5 L66.4,166.0 L72.9,163.8 L79.5,160.8 L86.1,156.6 L92.7,151.1 L99.3,143.9 L105.9,135.1 L112.5,124.5 L119.1,112.4 L125.6,99.1 L132.2,85.1 L138.8,71.1 L145.4,57.9 L152.0,46.5 L158.6,37.6 L165.2,31.9 L171.8,30.0 L178.4,31.9 L184.9,37.6 L191.5,46.5 L198.1,57.9 L204.7,71.1 L211.3,85.1 L217.9,99.1 L224.5,112.4 L231.1,124.5 L237.6,135.1 L244.2,143.9 L250.8,151.1 L257.4,156.6 L264.0,160.8 L270.6,163.8 L277.2,166.0 L283.8,167.5 L290.4,168.4 L296.9,169.1 L303.5,169.5 L310.1,169.7 L323.3,169.9 L336.5,170.0"/>
+      <path stroke="var(--c-green)" stroke-width="2" d="M66.4,170.0 L79.5,169.9 L92.7,169.8 L99.3,169.7 L105.9,169.5 L112.5,169.3 L119.1,169.0 L125.6,168.6 L132.2,168.0 L138.8,167.2 L145.4,166.1 L152.0,164.7 L158.6,162.9 L165.2,160.6 L171.8,157.7 L178.4,154.2 L184.9,149.9 L191.5,144.8 L198.1,138.9 L204.7,132.2 L211.3,124.5 L217.9,116.2 L224.5,107.1 L231.1,97.5 L237.6,87.6 L244.2,77.6 L250.8,67.9 L257.4,58.6 L264.0,50.2 L270.6,43.0 L277.2,37.1 L283.8,32.9 L290.4,30.5 L296.9,30.1 L303.5,31.5 L310.1,34.8 L316.7,39.9 L323.3,46.5 L329.9,54.3 L336.5,63.2 L343.1,72.7 L349.6,82.6 L356.2,92.6 L362.8,102.3 L369.4,111.7 L376.0,120.4 L382.6,128.5 L389.2,135.7 L395.8,142.0 L402.4,147.5 L408.9,152.1 L415.5,156.0 L422.1,159.2 L428.7,161.8 L435.3,163.8 L441.9,165.4 L448.5,166.7 L455.1,167.6 L461.6,168.3 L468.2,168.8 L474.8,169.2 L481.4,169.4 L488.0,169.6 L494.6,169.8 L507.8,169.9 L520.9,170.0"/>
+      <path stroke="var(--c-red)" stroke-width="2" d="M211.3,170.0 L224.5,169.9 L231.1,169.9 L237.6,169.8 L244.2,169.6 L250.8,169.4 L257.4,169.0 L264.0,168.4 L270.6,167.6 L277.2,166.5 L283.8,164.9 L290.4,162.7 L296.9,159.7 L303.5,155.9 L310.1,151.1 L316.7,145.0 L323.3,137.8 L329.9,129.3 L336.5,119.5 L343.1,108.7 L349.6,97.1 L356.2,85.1 L362.8,73.0 L369.4,61.5 L376.0,51.1 L382.6,42.3 L389.2,35.6 L395.8,31.4 L402.4,30.0 L408.9,31.4 L415.5,35.6 L422.1,42.3 L428.7,51.1 L435.3,61.5 L441.9,73.0 L448.5,85.1 L455.1,97.1 L461.6,108.7 L468.2,119.5 L474.8,129.3 L481.4,137.8 L488.0,145.0 L494.6,151.1 L501.2,155.9 L507.8,159.7 L514.4,162.7 L520.9,164.9 L527.5,166.5 L534.1,167.6 L540.7,168.4 L547.3,169.0 L553.9,169.4 L560.5,169.6 L567.1,169.8 L580.2,169.9 L593.4,170.0"/>
+      <path stroke="var(--c-v)" stroke-width="1.8" stroke-dasharray="1 4" d="M40.0,170.0 L53.2,169.9 L66.4,169.9 L79.5,169.8 L86.1,169.7 L92.7,169.6 L99.3,169.4 L105.9,169.2 L112.5,168.9 L119.1,168.6 L125.6,168.1 L132.2,167.5 L138.8,166.7 L145.4,165.7 L152.0,164.5 L158.6,163.1 L165.2,161.3 L171.8,159.2 L178.4,156.6 L184.9,153.6 L191.5,150.1 L198.1,146.1 L204.7,141.6 L211.3,136.5 L217.9,130.8 L224.5,124.5 L231.1,117.8 L237.6,110.6 L244.2,103.0 L250.8,95.1 L257.4,87.1 L264.0,79.0 L270.6,71.1 L277.2,63.4 L283.8,56.1 L290.4,49.5 L296.9,43.6 L303.5,38.6 L310.1,34.7 L316.7,31.9 L323.3,30.4 L329.9,30.0 L336.5,31.0 L343.1,33.2 L349.6,36.5 L356.2,41.0 L362.8,46.5 L369.4,52.7 L376.0,59.7 L382.6,67.2 L389.2,75.0 L395.8,83.1 L402.4,91.1 L408.9,99.1 L415.5,106.9 L422.1,114.3 L428.7,121.2 L435.3,127.7 L441.9,133.7 L448.5,139.1 L455.1,143.9 L461.6,148.2 L468.2,151.9 L474.8,155.2 L481.4,157.9 L488.0,160.3 L494.6,162.2 L501.2,163.8 L507.8,165.2 L514.4,166.2 L520.9,167.1 L527.5,167.8 L534.1,168.3 L540.7,168.7 L547.3,169.1 L553.9,169.3 L560.5,169.5 L567.1,169.6 L573.6,169.7 L580.2,169.8 L586.8,169.9 L600.0,169.9"/>
+      <path stroke="var(--c-mel)" stroke-width="3" stroke-dasharray="7 4" d="M40.0,169.8 L46.6,169.7 L53.2,169.6 L59.8,169.3 L66.4,169.0 L72.9,168.4 L79.5,167.7 L86.1,166.7 L92.7,165.2 L99.3,163.3 L105.9,160.8 L112.5,157.6 L119.1,153.5 L125.6,148.4 L132.2,142.3 L138.8,135.1 L145.4,126.8 L152.0,117.5 L158.6,107.2 L165.2,96.3 L171.8,85.1 L178.4,73.8 L184.9,63.0 L191.5,53.1 L198.1,44.4 L204.7,37.6 L211.3,32.8 L217.9,30.3 L224.5,30.3 L231.1,32.8 L237.6,37.6 L244.2,44.4 L250.8,53.1 L257.4,63.0 L264.0,73.8 L270.6,85.1 L277.2,96.3 L283.8,107.2 L290.4,117.5 L296.9,126.8 L303.5,135.1 L310.1,142.3 L316.7,148.4 L323.3,153.5 L329.9,157.6 L336.5,160.8 L343.1,163.3 L349.6,165.2 L356.2,166.7 L362.8,167.7 L369.4,168.4 L376.0,169.0 L382.6,169.3 L389.2,169.6 L395.8,169.7 L402.4,169.8 L415.5,169.9 L428.7,170.0"/>
+    </g>
+  </svg>
+  <div class="legend">
+    <span><i style="border-color:var(--c-blue)"></i>Camera blue</span>
+    <span><i class="dash" style="border-color:var(--c-mel)"></i>Melanopic</span>
+    <span><i style="border-color:var(--c-green)"></i>Camera green</span>
+    <span><i class="dot" style="border-color:var(--c-v)"></i>Lux (eye's daytime response)</span>
+    <span><i style="border-color:var(--c-red)"></i>Camera red</span>
+  </div>
+  <p class="caption">Schematic only. The curve shapes are illustrative, not measured iPhone data. Melanopic sensitivity falls between the camera's blue and green channels, which is why it has to be estimated.</p>
+</div>
+
+<h3>Three approaches, from simplest to best</h3>
+<ol>
+  <li><strong>Colour temperature lookup.</strong> Estimate colour temperature from RGB, then use a typical mDER: about 0.4–0.5 for warm 2700–3000 K LEDs, about 0.6 at 4000 K, about 0.9–1.0 for daylight. These are approximate figures, so check them against the CIE S 026 toolbox before relying on them. Crude, but robust for white light.</li>
+  <li><strong>Fit a model to a library of real light spectra</strong> (daylight, incandescent, LED, fluorescent, screens). Map camera RGB to all five standard eye-response values, including melanopic. One study using RGB colour sensors got within ±3.3% of the values calculated from full spectra (<a href="https://doaj.org/article/0fd96bd8bbc84472b79bc0ba3df3d555">Trinh et al., Sensors 2023</a>). Those were dedicated sensors with known responses, so treat ±3.3% as a best case, not what a phone will do. A smartphone-specific version was published by <a href="https://library.imaging.org/cic/articles/27/1/art00062">Lucassen et al., CIC 2019</a>.</li>
+  <li><strong>Flag low confidence.</strong> Measure how far the light's colour is from normal white light. If it's far off (RGB LED strips, coloured light), show "estimate unreliable".</li>
+</ol>
+
+<h3>Pick a specific "blue light" number</h3>
+<p>"Blue light" on its own is vague. Options:</p>
+<ul>
+  <li><strong>S-cone-opic EDI:</strong> the blue-cone measure from the same standard. The camera's blue channel tracks it well, so it's the easiest to estimate.</li>
+  <li><strong>Melanopic EDI:</strong> the body-clock measure, and the best headline number.</li>
+  <li>Skip the IEC 62471 blue-light hazard measure for v1. It measures retinal damage risk, and it needs a different kind of measurement.</li>
+</ul>
+
+<h3>Product hook</h3>
+<p>The 2022 expert recommendations (Brown et al., PLOS Biology) for melanopic EDI at eye level:</p>
+<div class="zones">
+  <div class="zone day"><div class="label">Daytime</div><div class="val">≥ 250 lx</div></div>
+  <div class="zone eve"><div class="label">Last 3 h before bed</div><div class="val">≤ 10 lx</div></div>
+  <div class="zone sleep"><div class="label">While sleeping</div><div class="val">≤ 1 lx</div></div>
+</div>
+<p>A red/amber/green gauge against these limits tells people what to do, not just a number.</p>
+
+<h2><span class="num">04</span>Extras specific to the iPhone 17 Pro</h2>
+<ul>
+  <li>The 48 MP ultra-wide makes the software angle correction possible.</li>
+  <li><strong>Flicker measurement.</strong> The camera reads its sensor row by row (rolling shutter). In a short-exposure frame of an evenly lit surface, brightness changes from row to row show the light flickering over time. That gives flicker percentage and frequency, which few apps offer.</li>
+  <li>Calibrate each camera separately: the main camera for dim light, the ultra-wide for wide coverage.</li>
+  <li>Keep the sensor input swappable in case Apple ever opens up the ambient light sensors.</li>
+</ul>
+
+<h2><span class="num">05</span>Accuracy targets</h2>
+<p class="note"><strong>To verify, not promises.</strong> These are goals for a calibrated build, not measured results.</p>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Quantity</th><th>White light, calibrated, with diffuser</th><th>Coloured or narrow-band light</th></tr></thead>
+  <tbody>
+    <tr><td>Lux</td><td class="nowrap">±5–10%</td><td class="nowrap">±15–30%</td></tr>
+    <tr><td>Colour temperature</td><td class="nowrap">±100–200 K</td><td>not meaningful</td></tr>
+    <tr><td>Melanopic EDI</td><td class="nowrap">±10–20%</td><td>unreliable → flag it</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2><span class="num">06</span>What's hard</h2>
+<ul>
+  <li><strong>Calibration is most of the work.</strong> Each iPhone model and camera needs:
+    <ul>
+      <li>an absolute scale, checked against a reference lux meter</li>
+      <li>a correction for darker image corners</li>
+      <li>the spectrum model, checked against a spectrometer (Sekonic C-800 or UPRtek MK350 class) across 30–100 real light sources</li>
+    </ul>
+    The free tools luox.app and the CIE S 026 toolbox calculate the true reference values from measured spectra.
+  </li>
+  <li><strong>No background measuring.</strong> iOS won't let the camera run in the background, so the app can take spot readings or run a foreground "monitor" mode on a stand. It can't log all day like a wearable. The Bluetooth sensor in <a href="#ble-sensor">section 07</a> solves this.</li>
+</ul>
+<p><strong>Suggested tech:</strong> SwiftUI, AVFoundation (raw capture, manual exposure), Accelerate/Metal for processing raw frames, SwiftData for the log, Swift Charts, App Intents for a quick-measure shortcut.</p>
+
+<h3>Suggested plan</h3>
+<ol class="steps">
+  <li><strong>Test build (a few days):</strong> raw capture plus the exposure maths, compared against any lux meter in about 10 scenes. This checks that readings scale correctly across dim to bright light.</li>
+  <li><strong>v0.1:</strong> calibrated lux and colour temperature, desk and eye-level modes, diffuser support.</li>
+  <li><strong>v0.2:</strong> melanopic and blue-light estimates, confidence flag, the bedtime/daytime gauge.</li>
+  <li><strong>v0.3:</strong> software angle correction, flicker, history. Optionally the Bluetooth spectral sensor from <a href="#ble-sensor">section 07</a> as a "pro" mode for accurate melanopic readings.</li>
+</ol>
+
+<h2 id="ble-sensor"><span class="num">07</span>Option: a Bluetooth spectral sensor</h2>
+<p>iOS doesn't let apps read the iPhone's own light sensors, not even personal builds installed from Xcode or TestFlight. For personal use, the most accurate option is a small external sensor that streams to the app over Bluetooth. It fixes the camera's two biggest limits: only three colour channels, and no background measuring.</p>
+
+<div class="arch" role="img" aria-label="System diagram: a wearable clip with a PTFE diffuser, AS7343 spectral sensor and nRF52840 board sends data over Bluetooth LE to the iPhone app, which applies a calibration matrix and logs lux and melanopic values.">
+  <div class="arch-col">
+    <div class="arch-title">Wearable clip</div>
+    <div class="arch-box">PTFE diffuser<small>evens out response to light from all angles</small></div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-box">AS7343 spectral sensor<small>~11 visible bands + clear + near-infrared</small></div>
+    <div class="arch-arrow">↓ I²C</div>
+    <div class="arch-box">nRF52840 board + flash buffer<small>auto-gain, timestamps, stores raw counts</small></div>
+    <div class="arch-box muted">LiPo 150–250 mAh · USB-C charging</div>
+  </div>
+  <div class="arch-link">Bluetooth LE<span>→</span></div>
+  <div class="arch-col">
+    <div class="arch-title">iPhone app</div>
+    <div class="arch-box">CoreBluetooth<small>background mode + state restoration</small></div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-box">Calibration matrix<small>raw counts → lux + 5 α-opic values</small></div>
+    <div class="arch-arrow">↓</div>
+    <div class="arch-box">Log, charts, evening alerts<small>SwiftData + Swift Charts</small></div>
+  </div>
+</div>
+
+<h3>Camera vs Bluetooth sensor</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th></th><th>Camera only</th><th>Bluetooth sensor</th></tr></thead>
+  <tbody>
+    <tr><td>Colour channels</td><td>3 (RGB)</td><td>~11 visible bands + clear + near-infrared</td></tr>
+    <tr><td>Melanopic estimate</td><td>Reasonable for white light, unreliable for coloured light</td><td>Much better, including most LED lighting (still to validate)</td></tr>
+    <tr><td>Measures near the eyes</td><td>Only while you hold the phone up</td><td>Continuously, if worn on glasses or collar</td></tr>
+    <tr><td>All-day logging</td><td>No</td><td>Yes (on-device buffer + background Bluetooth)</td></tr>
+    <tr><td>Flicker</td><td>Rolling-shutter analysis</td><td>Built-in 100/120 Hz detection (basic)</td></tr>
+    <tr><td>Cost</td><td>None</td><td>Roughly €30–50 in parts, plus build time</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Parts</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Part</th><th>Suggestion</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>Spectral sensor</td><td>ams OSRAM AS7343 on an I²C breakout board</td><td>14 channels across ~400–750 nm plus near-infrared, with flicker detection. The older 10-channel AS7341 has more ready-made boards and is a fine fallback.</td></tr>
+    <tr><td>Board with Bluetooth</td><td>Seeed XIAO nRF52840</td><td>Thumb-sized, low power, built-in battery charger, 2 MB flash for buffering</td></tr>
+    <tr><td>Battery</td><td>150–250 mAh LiPo with a protection circuit</td><td>Several days per charge at one reading every 10–30 s (measure to confirm)</td></tr>
+    <tr><td>Diffuser</td><td>0.5–1 mm PTFE disc, flush with the housing</td><td>Makes the reading count light from all directions correctly, like a lux meter's white dome</td></tr>
+    <tr><td>Housing</td><td>3D-printed, light-tight sides, clip on the back</td><td>Stops light leaking in from the side; mounts on glasses or collar</td></tr>
+    <tr><td>Optional</td><td>XIAO nRF52840 <em>Sense</em> variant</td><td>Adds a motion sensor, so the app knows whether it's worn and facing forward</td></tr>
+  </tbody>
+</table>
+</div>
+<p><strong>Where to wear it:</strong> on a glasses arm is closest to what your eyes receive. A collar clip is a practical compromise. A chest pendant is common in research but tilts with posture.</p>
+
+<h3>Firmware</h3>
+<ul>
+  <li><strong>Start with Arduino</strong> (Seeed's nRF52 core with the Bluefruit library) for a quick prototype. Move to Zephyr / nRF Connect SDK later if battery life needs to improve.</li>
+  <li><strong>Loop:</strong> wake every 10–30 s, adjust gain and integration time so counts sit at 10–80% of full scale, read all channels in one pass, save a record to flash, send it if the phone is connected, sleep.</li>
+  <li><strong>Keep the firmware simple:</strong> send raw counts with the gain and integration time used. Do all the maths on the phone, so calibration can change without reflashing the device.</li>
+  <li><strong>Storage:</strong> a ~50-byte record every 30 s is about 150 KB a day, so roughly two weeks fit in 2 MB of flash.</li>
+</ul>
+<pre><code>struct Sample {                 // ~50 bytes, little-endian
+  uint32 seq;                   // increasing sample number, used for sync
+  uint32 unixTime;              // seconds; clock set by the phone on connect
+  uint8  gain;                  // sensor gain setting (0.5× … 2048×)
+  uint16 atime, astep;          // integration time = (atime+1)·(astep+1)·2.78 µs
+  uint16 counts[18];            // all channels from one auto-SMUX read
+  uint8  flags;                 // saturated, 100/120 Hz flicker, battery low
+}</code></pre>
+
+<h3>Bluetooth interface</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Characteristic</th><th>Type</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>Live sample</td><td class="nowrap">notify</td><td>Latest record; fits in one Bluetooth packet</td></tr>
+    <tr><td>Log transfer</td><td class="nowrap">write + notify</td><td>Phone asks for everything after sample N; the device streams stored records</td></tr>
+    <tr><td>Control</td><td class="nowrap">write</td><td>Set clock and sample interval, start/stop, measure dark offset</td></tr>
+    <tr><td>Battery level (standard service)</td><td class="nowrap">read + notify</td><td>Shown in the app</td></tr>
+    <tr><td>Device information (standard service)</td><td class="nowrap">read</td><td>Firmware version and serial number, used to look up the device's calibration</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>iPhone app side</h3>
+<ul>
+  <li><strong>Background Bluetooth:</strong> CoreBluetooth with the <code>bluetooth-central</code> background mode and state restoration. iOS then relaunches the app when sensor data arrives, even after the system has closed it.</li>
+  <li><strong>Gaps are covered.</strong> If you force-quit the app, iOS won't relaunch it. The device keeps buffering, and the app catches up from the last sample number when you open it.</li>
+  <li><strong>Features this enables:</strong> daily light-dose charts, time spent above 250 lx melanopic EDI during the day, and an evening alert when it stays above 10 lx after a chosen time.</li>
+</ul>
+<pre><code>basic_i = (counts_i − dark_i) / (gain · t_int)     normalise each channel
+q       = M · basic                                M = 6 × N calibration matrix
+q       = [E_v, E_sc, E_mc, E_lc, E_rh, E_mel]     lux + the 5 α-opic irradiances
+mEDI    = E_mel / 1.3262                           E_mel in mW/m²</code></pre>
+
+<h3>Calibration</h3>
+<ol>
+  <li><strong>Without a spectrometer:</strong> build the matrix M from the sensor's published channel responses and the diffuser's transmission, using a large library of light spectra. Then set the absolute scale with a lux meter. This is quick, but it relies on the datasheet; differences between individual sensors and the housing will shift results.</li>
+  <li><strong>With a spectrometer:</strong> measure 30–100 real light sources with both instruments side by side and fit M directly. This is the version to trust.</li>
+</ol>
+
+<h3>Build steps</h3>
+<ol class="steps">
+  <li><strong>Breadboard (an evening):</strong> sensor and board wired over I²C, printing raw counts over USB.</li>
+  <li><strong>Live Bluetooth:</strong> the live sample characteristic plus a minimal iOS screen showing lux and melanopic EDI from the datasheet-based matrix.</li>
+  <li><strong>Logging:</strong> flash buffer, log transfer, background mode and state restoration.</li>
+  <li><strong>Hardware:</strong> housing, PTFE diffuser, calibration against reference instruments.</li>
+  <li><strong>App features:</strong> daily dose charts and evening alerts.</li>
+</ol>
+<p class="note"><strong>Safety:</strong> it's worn on the body, so use a LiPo cell with a protection circuit and a housing that doesn't press on the battery.</p>
+
+<h2 id="buy-vs-build"><span class="num">08</span>Buy instead of build?</h2>
+<p>Ready-made melanopic meters and wearables exist, but none matches what this project needs: a cheap clip-on that streams live readings into your own iPhone app. What's on the market (November 2026):</p>
+
+<div class="table-wrap">
+<table>
+  <thead><tr><th>Device</th><th>Melanopic</th><th>iPhone connection</th><th>Price</th><th>Catch</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>LYS Button V1 / PRO</strong><small>Clip-on wearable, 7-day battery</small></td>
+      <td>Melanopic EDI</td>
+      <td>Bluetooth; LYS Collect app, CSV export or their cloud; no public API</td>
+      <td class="nowrap">£300 / £700</td>
+      <td>Closest match, but sold for research and building projects; data stays in their app</td>
+    </tr>
+    <tr>
+      <td><strong>Condor ActLumus</strong><small>Wrist actigraph, 10 colour channels</small></td>
+      <td>Melanopic EDI (CIE S 026)</td>
+      <td>Vendor software; no live iPhone feed found</td>
+      <td class="nowrap">Quote only</td>
+      <td>Research-grade; the wrist is far from eye level</td>
+    </tr>
+    <tr>
+      <td><strong>LIDlight LuxSeeker EML</strong><small>Handheld Bluetooth meter</small></td>
+      <td>EML, an older metric (melanopic EDI ≈ 0.906 × EML)</td>
+      <td>Free iOS app, CSV export</td>
+      <td>Not confirmed</td>
+      <td>Spot readings only, not wearable</td>
+    </tr>
+    <tr>
+      <td><strong>UPRtek MK350S Premium</strong><small>Handheld spectrometer</small></td>
+      <td>Melanopic EDI shown on screen</td>
+      <td>App support unconfirmed</td>
+      <td class="nowrap">~$3,750–4,125</td>
+      <td>Reference-grade; the right tool for calibration, not for daily use</td>
+    </tr>
+    <tr>
+      <td><strong>Asensetek Lighting Passport</strong><small>Pocket spectrometer</small></td>
+      <td>Unconfirmed</td>
+      <td>Bluetooth iOS app</td>
+      <td class="nowrap">$1,295–2,790<small>older listings</small></td>
+      <td>Melanopic support not confirmed</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p>No longer available or not usable with an iPhone: WaveGo (had an iOS app with melanopic lux, discontinued), Photonfy (Android only, retired), and f.luxometer (Windows software for an X-Rite colour meter). No mainstream consumer wearable tracks melanopic light; Apple Watch's Time in Daylight counts outdoor minutes, not lux.</p>
+
+<h3>Why building is more practical here</h3>
+<div class="table-wrap">
+<table>
+  <thead><tr><th></th><th>DIY sensor (section 07)</th><th>Nearest ready-made (LYS Button PRO)</th></tr></thead>
+  <tbody>
+    <tr><td>Cost</td><td>Roughly €30–50 in parts</td><td>£700</td></tr>
+    <tr><td>Data in your own app</td><td>Yes, live, in a format you define</td><td>Only via their app's CSV export or cloud; Bluetooth protocol undocumented</td></tr>
+    <tr><td>Sensing</td><td>AS7341/AS7343: 8–11 colour channels + clear + near-infrared + flicker</td><td>8 colour channels + clear + near-infrared + flicker, the same layout as the AS7341</td></tr>
+    <tr><td>Calibration</td><td>Yours to change at any time, without reflashing</td><td>Fixed by the vendor</td></tr>
+    <tr><td>Validation and polish</td><td>Up to you: housing, battery, testing</td><td>Factory-built and used in published research</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="callout">
+  <p><strong>Recommendation:</strong> build the sensor, and buy or borrow one ready-made meter only as a calibration reference. A LuxSeeker EML is enough for basic checks; for trustworthy melanopic values, rent or borrow an MK350S-class spectrometer for a few days.</p>
+</div>
+<p class="caption">Prices and features come from vendor pages and listings found in November 2026. Several are unconfirmed (LuxSeeker price, whether LYS sells to individuals, MK350S and Lighting Passport app features); check with the vendors before buying.</p>
+
+<h2><span class="num">09</span>Open questions</h2>
+<ul>
+  <li><strong>Purpose (decided):</strong> personal use, installed through a paid Apple developer account (direct from Xcode or via TestFlight). App Store review isn't a constraint, so a DIY sensor and debug screens are fine.</li>
+  <li><strong>Accessories:</strong> is a cheap diffuser clip acceptable, or must it work with the phone alone?</li>
+  <li><strong>Reference instrument:</strong> can you borrow or rent an MK350S-class spectrometer for calibration? It's the biggest factor in whether melanopic readings can be trusted.</li>
+</ul>
+
+<h2><span class="num">—</span>Sources</h2>
+<ul class="sources">
+  <li><a href="https://developer.apple.com/forums/thread/850773">Apple Developer Forums – no public real-time ambient light API (FB25181710)</a></li>
+  <li><a href="https://developer.apple.com/forums/thread/845522">Apple Developer Forums – reading the built-in ambient light sensor in real time</a></li>
+  <li><a href="https://developer.apple.com/documentation/sensorkit/srambientlightsample.md">SRAmbientLightSample – Apple docs</a></li>
+  <li><a href="https://developer.apple.com/forums/thread/701024">How to get Lux by SRAmbientLightSample – Apple forums</a></li>
+  <li><a href="https://www.researchandcare.org/resources/accessing-sensorkit-data">Accessing SensorKit data (research entitlement)</a></li>
+  <li><a href="https://www.macrumors.com/2022/09/15/iphone-14-dual-ambient-light-sensors">MacRumors – iPhone dual ambient light sensors</a></li>
+  <li><a href="https://theapplewiki.com/wiki/IPhone_17_Pro">The Apple Wiki – iPhone 17 Pro</a></li>
+  <li><a href="https://library.imaging.org/cic/articles/27/1/art00062">Lucassen et al., smartphone mDER estimation (IS&amp;T CIC 2019)</a></li>
+  <li><a href="https://doaj.org/article/0fd96bd8bbc84472b79bc0ba3df3d555">Trinh, Bodrogi, Khanh – RGB sensors for mEDI (Sensors 2023)</a></li>
+  <li><a href="https://www.innerscene.com/papers/determination-and-measurement-of-melanopic-equivalent-daylight-d65-illuminance-medi-in-the-context-of-smart-and-integrative-lighting">Determination and measurement of mEDI – InnerScene</a></li>
+  <li><a href="https://led-professional.com/all/exploring-non-visual-effects-of-light-an-investigation-using-rgb-color-sensors-for-smart-lighting-applications">LED Professional – RGB color sensors for non-visual light effects</a></li>
+  <li><a href="https://lystechnologies.io/pages/for-research">LYS Technologies – Button V1 / PRO for research (pricing)</a></li>
+  <li><a href="https://apps.apple.com/us/app/-/id1496944104">LYS Collect – App Store</a></li>
+  <li><a href="https://condorinst.com/en/actlumus-actigraph/">Condor Instruments – ActLumus</a></li>
+  <li><a href="https://www.nature.com/articles/s44323-026-00088-y">Evaluation of wearable light dosimeters (npj Biological Timing and Sleep, 2026)</a></li>
+  <li><a href="https://directindustry.com/prod/lidlight-inc/product-4569459-2579239.html">LIDlight LuxSeeker EML – DirectIndustry</a></li>
+  <li><a href="https://apps.apple.com/us/app/luxseeker-ble-lightmeter/id1498091398">LuxSeeker – App Store</a></li>
+  <li><a href="https://www.uprtek.com/en/product/spectrometers/mk350s-premium">UPRtek MK350S Premium</a></li>
+  <li><a href="https://gamma-sci.com/product-category/uprtek">Gamma Scientific – UPRtek pricing</a></li>
+  <li><a href="https://www.photonics.com/Product.aspx?PRID=57693">Asensetek Lighting Passport – Photonics.com</a></li>
+  <li><a href="https://budgetlightforum.com/t/list-of-spectrometers-to-measure-cri-etc/70431">Budget Light Forum – list of spectrometers and prices</a></li>
+  <li><a href="https://oceaninsight.com/solutions/case-studies/monitoring-lighting-in-buildings/">Ocean Insight – WaveGo case study (discontinued note)</a></li>
+  <li><a href="https://fluxometer.com/page/measure/">f.luxometer</a></li>
+</ul>
+
+<footer>Feasibility notes, November 2026. Accuracy figures are design targets, not test results.</footer>
+</main>
+</body>
+</html>
