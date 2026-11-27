@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EyeLux Camera Test</title>
+<meta name="description" content="The EyeLux camera test on an iPhone 16 Pro: five checks in daylight and after dark, using only the iPhone.">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --surface: #ffffff;
+    --surface-2: #f3f1ec;
+    --text: #1d1c1a;
+    --muted: #64615b;
+    --border: #e3dfd6;
+    --accent: #0e7c86;
+    --accent-soft: #e2f2f3;
+    --warn: #a15c07;
+    --warn-soft: #fbf0df;
+    --done: #2f7d32;
+    --code-bg: #f3f1ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141414; --surface: #1c1c1b; --surface-2: #242423; --text: #ecebe8; --muted: #a29f98;
+      --border: #34332f; --accent: #4cc3cd; --accent-soft: #12302f; --warn: #e8a548; --warn-soft: #33270f;
+      --done: #7cc47f; --code-bg: #242423;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141414; --surface: #1c1c1b; --surface-2: #242423; --text: #ecebe8; --muted: #a29f98;
+    --border: #34332f; --accent: #4cc3cd; --accent-soft: #12302f; --warn: #e8a548; --warn-soft: #33270f;
+    --done: #7cc47f; --code-bg: #242423;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 40px 16px 72px; }
+
+  .kicker { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 8px; }
+  h1 { font-size: clamp(28px, 6vw, 38px); line-height: 1.15; margin: 0 0 10px; letter-spacing: -.02em; }
+  .meta { color: var(--muted); font-size: 15px; margin: 0; }
+  h2 { font-size: 22px; line-height: 1.3; margin: 44px 0 12px; letter-spacing: -.01em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  h2 .num { color: var(--accent); font-size: 16px; font-weight: 700; }
+  h2 .when { font-size: 13px; font-weight: 600; color: var(--muted); background: var(--surface-2); border-radius: 999px; padding: 2px 10px; }
+  .part { margin: 60px 0 -24px; padding-top: 18px; border-top: 2px solid var(--border); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin: 5px 0; }
+  strong { font-weight: 650; }
+  .ui { font-weight: 650; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 0 6px; white-space: nowrap; }
+  .type { font: 0.92em ui-monospace, "SF Mono", Menlo, Consolas, monospace; background: var(--code-bg); border-radius: 5px; padding: 1px 6px; white-space: nowrap; }
+
+  .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); border-radius: 10px; padding: 16px 18px; margin: 26px 0 0; }
+  .callout p:last-child { margin-bottom: 0; }
+  .note { background: var(--warn-soft); border-radius: 10px; padding: 12px 16px; margin: 0 0 16px; font-size: 16px; }
+  .note strong { color: var(--warn); }
+  .note ul { margin: 6px 0 0; }
+  .note li:last-child { margin-bottom: 0; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 0 0 14px; }
+  .card h3 { font-size: 16px; margin: 0 0 6px; }
+  .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+  .pass { font-size: 15px; color: var(--muted); margin: 6px 0 0; }
+
+  .steps { list-style: none; padding: 0; margin: 0 0 14px; }
+  .steps li { margin: 0; border-bottom: 1px solid var(--border); }
+  .steps li:last-child { border-bottom: 0; }
+  .steps label { display: flex; gap: 12px; align-items: flex-start; padding: 10px 2px; cursor: pointer; }
+  .steps input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; accent-color: var(--accent); }
+  .steps input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--border); }
+
+  .uilist { display: grid; grid-template-columns: max-content 1fr; gap: 8px 14px; align-items: baseline; margin: 0 0 16px; }
+  .uilist dt { margin: 0; }
+  .uilist dd { margin: 0; color: var(--text); }
+  @media (max-width: 520px) {
+    .uilist { grid-template-columns: 1fr; gap: 2px; }
+    .uilist dd { margin-bottom: 10px; color: var(--muted); }
+  }
+
+  .toolbar { display: flex; justify-content: flex-end; margin-top: 28px; }
+  button.reset { font: inherit; font-size: 14px; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <p class="kicker">EyeLux · Phase 0 · iPhone 16 Pro</p>
+  <h1>Camera test on your iPhone 16 Pro</h1>
+  <p class="meta">About 45 minutes in two sittings: 15 in daylight, 30 after dark. Only the iPhone, no special equipment.</p>
+</header>
+
+<div class="callout">
+  <p><strong>Thank you for helping.</strong> EyeLux is an app that will measure how much light reaches your eyes, in lux, using only the iPhone's camera. Before it can do that, I need to know how the cameras behave when the app reads their raw sensor data. That's what this test checks. It doesn't measure lux yet.</p>
+  <p><strong>Why your iPhone:</strong> these checks have already run on an iPhone 14 Pro and a 17 Pro. A 16 Pro shows whether what I've learned holds across models.</p>
+  <p><strong>Two sittings.</strong> Part 1 is in daylight, indoors by a window. Part 2 needs real darkness, so start it at least an hour after sunset: a curtained room in the daytime lets in more light than you'd think.</p>
+</div>
+<p style="margin-top:14px">Tip: keep this page open on an iPad or a computer while you use the iPhone, and tick the boxes as you go (the ticks are remembered on the device you're reading on). If you only have the iPhone, read each check through before you start it.</p>
+
+<h2>Before you start</h2>
+<div class="card">
+  <h3>Install the app</h3>
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="i1"><span>On the iPhone, open the TestFlight invitation (an email from TestFlight, or the link I sent you) and tap <span class="ui">View in TestFlight</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="i2"><span>If the App Store opens instead, install <strong>TestFlight</strong> (free, made by Apple), then go back to the invitation and tap it again.</span></label></li>
+    <li><label><input type="checkbox" data-id="i3"><span>In TestFlight, tap <span class="ui">Accept</span>, then <span class="ui">Install</span>. The app is called <strong>EyeLux</strong>.</span></label></li>
+    <li><label><input type="checkbox" data-id="i4"><span>Open EyeLux and tap <span class="ui">Allow</span> when it asks to use the camera.</span></label></li>
+    <li><label><input type="checkbox" data-id="i5"><span>Scroll down to the <strong>Camera</strong> section and check it says <span class="type">App 0.1 (3)</span>.</span></label></li>
+  </ol>
+</div>
+<div class="card">
+  <h3>What you need</h3>
+  <ul>
+    <li>One sheet of plain white printer paper</li>
+    <li>A dark cloth (a sock or a towel will do)</li>
+    <li>A tape measure, at least 2 m long</li>
+    <li>A lamp with an ordinary bulb you can see (take the shade off if it comes off easily), not on a dimmer</li>
+    <li>A few books to lean the iPhone against</li>
+    <li>The iPhone charged to at least half</li>
+  </ul>
+</div>
+
+<h2>The app at a glance</h2>
+<p>It's a bare test app, so it looks technical. You only need these parts:</p>
+<dl class="uilist">
+  <dt><strong>Picture</strong></dt><dd>At the top: what the camera sees.</dd>
+  <dt><strong>Status line</strong></dt><dd>Just below the picture. It says what the app is doing, and after each capture it shows the result as a line of numbers. You don't need to read them.</dd>
+  <dt><span class="ui">Ultra wide</span> <span class="ui">Main</span></dt><dd>Which camera. Every check uses both.</dd>
+  <dt><span class="ui">Auto</span> <span class="ui">No clip</span> <span class="ui">Manual</span></dt><dd>How the exposure is chosen. <strong>No clip</strong> is the default, and most steps use it.</dd>
+  <dt><strong>Note</strong></dt><dd>A label for the next capture, for example <span class="type">paper</span>. Replace the text each time a step gives a new one.</dd>
+  <dt><span class="ui">Capture</span> <span class="ui">Linearity sweep</span></dt><dd>The two buttons that take measurements.</dd>
+  <dt><strong>Captures</strong></dt><dd>At the bottom: every result so far, with <span class="ui">Export CSV</span> to send them at the end.</dd>
+</dl>
+<div class="note">
+  <strong>Good to know</strong>
+  <ul>
+    <li><strong>The screen goes black while measuring.</strong> That's on purpose: in the dark checks the screen's own light would spoil the result. Wait until it comes back. That takes a few seconds, up to about 15 with a bright lamp in view, and about a minute for a sweep.</li>
+    <li><strong>Don't press the Camera Control</strong>, the flat button low on the right-hand edge. It opens Apple's Camera app. If that happens, go back to EyeLux and repeat the step.</li>
+    <li><strong>Never tap Clear.</strong> It deletes all your results.</li>
+    <li>Leave "Black screen while measuring" on. Leave "Save DNG files" off, except in check C.</li>
+  </ul>
+</div>
+
+<p class="part">Part 1 · Daylight</p>
+
+<h2><span class="num">A</span>Camera details <span class="when">Any time · 2 min</span></h2>
+<p>The basic facts about each camera: which raw format it offers, its shortest and longest shutter times, and its sensitivity range.</p>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="a1"><span>With <span class="ui">Ultra wide</span> chosen, the status line should end with <span class="type">Bayer RAW</span> and four characters.</span></label></li>
+    <li><label><input type="checkbox" data-id="a2"><span>Scroll down until the whole <strong>Camera</strong> section is on screen and take a screenshot: press the side button and volume up together.</span></label></li>
+    <li><label><input type="checkbox" data-id="a3"><span>Scroll back up and choose <span class="ui">Main</span>. Wait for the status line to say <span class="type">ready</span>, then take another screenshot of the Camera section.</span></label></li>
+  </ol>
+  <p class="pass">If the status line says <span class="type">no Bayer RAW format!</span>, take the screenshot anyway. That's a result too.</p>
+</div>
+
+<h2><span class="num">B</span>Steady response <span class="when">Daylight · 5 min</span></h2>
+<p>Checks that the camera's numbers stay in proportion to the light when the app changes shutter speed and sensitivity, including the very high sensitivity it uses in the dark. A sweep takes about 15 pictures of the same scene at different settings.</p>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="b1"><span>Indoors, with ceiling lights and lamps off: LED lights flicker at the short shutter speeds the sweep uses. Lean the iPhone against books on a table, rear camera facing into the room or at a wall lit by daylight from a window. No direct sunshine on that wall, and keep the window itself out of the picture.</span></label></li>
+    <li><label><input type="checkbox" data-id="b2"><span>Choose <span class="ui">Ultra wide</span>, type <span class="type">window</span> as the note, and tap <span class="ui">Linearity sweep</span>. Don't touch the phone until the status line says <span class="type">Sweep done</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="b3"><span>If the app says <span class="type">Too bright for the sweep</span> instead, turn the phone towards a darker part of the room, or partly close the curtain, and tap <span class="ui">Linearity sweep</span> again.</span></label></li>
+    <li><label><input type="checkbox" data-id="b4"><span>Choose <span class="ui">Main</span> and run <span class="ui">Linearity sweep</span> again without moving the phone. Same as before if it's too bright.</span></label></li>
+  </ol>
+  <p class="pass">Best when the daylight is steady, not with clouds racing past the sun. Each sweep ends with a summary in bold; no need to check the numbers.</p>
+</div>
+
+<h2><span class="num">C</span>Corners vs centre <span class="when">Daylight · 5 min</span></h2>
+<p>Shows how much darker the picture gets towards its corners. That decides how the app weighs light arriving from different directions.</p>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="c1"><span>Turn on <strong>Save DNG files</strong>.</span></label></li>
+    <li><label><input type="checkbox" data-id="c2"><span>Choose <span class="ui">Ultra wide</span> and <span class="ui">No clip</span>, and type <span class="type">paper</span> as the note.</span></label></li>
+    <li><label><input type="checkbox" data-id="c3"><span>Hold the sheet of paper flat against the whole camera bump on the back, with your fingers at the edges of the sheet, not over the lenses. Point the phone at a bright, evenly lit wall or at the sky (never at the sun). Tap <span class="ui">Capture</span> and keep still until the screen comes back.</span></label></li>
+    <li><label><input type="checkbox" data-id="c4"><span>Choose <span class="ui">Main</span> and repeat.</span></label></li>
+    <li><label><input type="checkbox" data-id="c5"><span>Turn <strong>Save DNG files</strong> off again.</span></label></li>
+  </ol>
+  <p class="pass">This saves two photo files of about 24 MB each. You'll send them at the end.</p>
+</div>
+
+<p class="part">Part 2 · After dark, at least an hour after sunset</p>
+
+<h2><span class="num">D</span>Very dark, both cameras <span class="when">After dark · 10 min</span></h2>
+<p>How little light the camera can still tell apart from none at all. The light levels that matter here are those in a bedroom at night, far below what you could read by.</p>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="d1"><span>Turn on <strong>Do Not Disturb</strong> (swipe down from the top-right corner, tap <span class="ui">Focus</span>), so a notification doesn't light up the screen during a shot.</span></label></li>
+    <li><label><input type="checkbox" data-id="d2"><span>Make a room very dim: lights off, curtains closed, and just a little light from elsewhere, for example a lamp in the next room with the door ajar. About as dark as a bedroom at night: you can find your way around, but you couldn't read.</span></label></li>
+    <li><label><input type="checkbox" data-id="d3"><span>Choose <span class="ui">Ultra wide</span>, then <span class="ui">Manual</span>, then tap <span class="ui">Max exposure</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="d4"><span>Cover the camera completely: put a finger over the lenses, then wrap the dark cloth around. Type <span class="type">covered</span>, tap <span class="ui">Capture</span>, and keep it covered until the screen comes back.</span></label></li>
+    <li><label><input type="checkbox" data-id="d5"><span>Uncover it and lean the phone against something, rear camera facing into the room. Type <span class="type">dim</span> and tap <span class="ui">Capture</span> (still on Manual).</span></label></li>
+    <li><label><input type="checkbox" data-id="d6"><span>Without moving the phone, switch to <span class="ui">No clip</span>. Keep the note <span class="type">dim</span> and tap <span class="ui">Capture</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="d7"><span>Choose <span class="ui">Main</span> and repeat all three. First <span class="ui">Manual</span>, then tap <span class="ui">Max exposure</span> again, covered, <span class="type">covered</span>. Then uncover it, put it back in the same place, and capture <span class="type">dim</span>. Then <span class="ui">No clip</span>, <span class="type">dim</span>.</span></label></li>
+  </ol>
+  <p class="pass">Keep the iPad or computer screen face down while capturing: in a dark room it's a light source too. If a <span class="type">covered</span> shot says BURNT OUT, light got in: cover it more firmly and capture again. If a Manual <span class="type">dim</span> shot says BURNT OUT, the room is brighter than needed: let in less light and capture it again.</p>
+</div>
+
+<h2><span class="num">E</span>One lamp, two distances <span class="when">After dark · 15 min</span></h2>
+<p>Light from a small lamp gets four times weaker when you double the distance. This checks that the camera sees exactly that, with the bright bulb itself in the picture. To see both the bulb and the dark room around it, the app takes two or three pictures at different exposures and combines them (HDR), so the screen stays black for up to about 15 seconds.</p>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="e1"><span>A room with the curtains and door closed. The lamp is the only light: ceiling lights, TV and other screens off. Switch the lamp on a few minutes early so its brightness settles.</span></label></li>
+    <li><label><input type="checkbox" data-id="e2"><span>Put the iPhone at about the bulb's height, for example lamp and phone on the same long table, or both on the floor. Lean it against books exactly <strong>1 m</strong> from the bulb, measured to the camera, rear camera facing the lamp. The bulb should be near the middle of the picture at the top of the app.</span></label></li>
+    <li><label><input type="checkbox" data-id="e3"><span>Choose <span class="ui">Ultra wide</span> and <span class="ui">No clip</span>, type <span class="type">1 m</span>, and tap <span class="ui">Capture</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="e4"><span>Move the iPhone straight back to exactly <strong>2 m</strong>, still facing the lamp. Type <span class="type">2 m</span> and tap <span class="ui">Capture</span>.</span></label></li>
+    <li><label><input type="checkbox" data-id="e5"><span>Choose <span class="ui">Main</span>. Capture at <strong>2 m</strong> (<span class="type">2 m</span>), then move back to <strong>1 m</strong> (<span class="type">1 m</span>) and capture again.</span></label></li>
+  </ol>
+  <p class="pass">Each result line should mention <span class="type">HDR</span>. If one says BURNT OUT, capture again once; if it still does, carry on.</p>
+</div>
+
+<h2>Send me the results</h2>
+<div class="card">
+  <ol class="steps">
+    <li><label><input type="checkbox" data-id="s1"><span>Tap <span class="ui">Export CSV</span> at the bottom of the app, choose <strong>Mail</strong> (or Messages), and send it to me.</span></label></li>
+    <li><label><input type="checkbox" data-id="s2"><span>The two screenshots from check A, from the Photos app.</span></label></li>
+    <li><label><input type="checkbox" data-id="s3"><span>The photo files from check C: open the <strong>Files</strong> app › <strong>Browse</strong> › <strong>On My iPhone</strong> › <strong>EyeLux</strong>. Tap <span class="ui">Select</span>, choose all the <span class="type">.dng</span> files, then tap Share › Mail. Mail offers <strong>Mail Drop</strong> for large files; say yes.</span></label></li>
+  </ol>
+  <p class="pass">Please keep the app installed afterwards: there may be a short follow-up, and new versions arrive through TestFlight.</p>
+</div>
+
+<h2>If something goes wrong</h2>
+<ul>
+  <li><strong>An error in the status line:</strong> take a screenshot and send it, and carry on with the next check if you can.</li>
+  <li><strong>The app stops responding</strong>, or the screen stays black for more than two minutes: close it (swipe up from the bottom and flick it away) and open it again. Captures you've already made are kept.</li>
+  <li><strong>Apple's Camera app opened:</strong> the Camera Control was pressed. Go back to EyeLux and repeat the step.</li>
+  <li><strong>You captured something by mistake:</strong> no problem. Type a note on the next capture, for example <span class="type">redo</span>, and repeat the step.</li>
+  <li><strong>Don't tap Clear.</strong> It deletes all saved results and photo files.</li>
+</ul>
+
+<div class="toolbar"><button class="reset" type="button" id="reset">Clear all ticks</button></div>
+
+<footer>EyeLux test build 0.1 (3), Phase 0, iPhone 16 Pro. These checks use only the iPhone; the comparison with a lux meter comes later. Background: <a href="/luxmeter/" style="color:var(--accent)">the feasibility study</a>.</footer>
+</main>
+<script>
+  (function () {
+    var KEY = "eyelux-phase0-16pro-ticks";
+    var state = {};
+    try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
+    var boxes = document.querySelectorAll('input[type="checkbox"][data-id]');
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+    boxes.forEach(function (box) {
+      box.checked = !!state[box.dataset.id];
+      box.addEventListener("change", function () { state[box.dataset.id] = box.checked; save(); });
+    });
+    document.getElementById("reset").addEventListener("click", function () {
+      state = {}; save();
+      boxes.forEach(function (box) { box.checked = false; });
+    });
+  })();
+</script>
+</body>
+</html>

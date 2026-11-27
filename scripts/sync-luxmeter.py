@@ -4,7 +4,8 @@
 Published as unlisted, self-contained pages (not blog posts):
 
     /luxmeter/          iPhone lux, blue light and melanopic meter: feasibility notes
-    /luxmeter/phase0/   first camera test: step-by-step instructions for the tester
+    /luxmeter/phase0/   camera test rounds for the first tester (iPhone 17 Pro)
+    /luxmeter/16pro/    full camera test for the iPhone 16 Pro tester
 
 To update after editing either page:
 
@@ -22,6 +23,7 @@ DEST = WEB / "public" / "luxmeter"
 PAGES = {
     "luxmeter-exploration.html": "index.html",
     "phase0-instructions.html": "phase0/index.html",
+    "phase0-16pro.html": "16pro/index.html",
 }
 NOINDEX = '<meta name="robots" content="noindex, nofollow">\n'
 
